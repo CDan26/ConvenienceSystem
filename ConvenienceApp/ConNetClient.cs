@@ -1,0 +1,196 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Net;
+using System.Net.Sockets;
+using System.IO;
+
+namespace ConvenienceBackend
+{
+    public class ConNetClient
+    {
+
+
+        public ConvenienceClient cs;
+
+        public ConNetClient()
+        {
+
+            this.cs = new ConvenienceClient();
+        }
+
+        private StreamReader sr;
+        private StreamWriter sw;
+
+        private Stream s;
+        private TcpClient client;
+
+        public Dictionary<String, Double> Users;
+        public Dictionary<String, Double> Products;
+
+        public Boolean Connect()
+        {
+            
+                //Client-Mode
+                //IPAddress ipAddress = Dns.GetHostEntry("auxua.eu").AddressList[0];
+                Console.WriteLine("Set up Connection");
+                try { client = new TcpClient(Settings.ServerIP, Settings.Port); }
+                catch (Exception e) { return false; }
+                Console.WriteLine("Connection ready");
+                try
+                {
+                    s = client.GetStream();
+                    sr = new StreamReader(s);
+                    sw = new StreamWriter(s);
+                    sw.AutoFlush = true;
+                    sr.ReadLine();
+                    /*Console.WriteLine(sr.ReadLine());
+                    while (true)
+                    {
+                        Console.Write("Name: ");
+                        string name = Console.ReadLine();
+                        sw.WriteLine(name);
+                        if (name == "quit") break;
+                        //Console.WriteLine(sr.ReadLine());
+                        String answer = sr.ReadLine();
+                        Console.WriteLine(answer);
+                        this.Clienthandle(name, answer);
+                    }
+                    s.Close();*/
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("Fail: " + e.Message);
+                    return false;
+                }
+
+                return true;
+        }
+
+        public Boolean ClientCMD(String command)
+        {
+            //mom
+            //if (Server) return false;
+            if (s == null) return false;
+            if (sr == null) return false;
+            if (sw == null) return false;
+            if (client == null) return false;
+            try
+            {
+                sw.WriteLine(command);
+                String answer = sr.ReadLine();
+                //String answer = sr.ReadToEnd();
+                Console.WriteLine("a: " + answer);
+                return this.Clienthandle(command, answer);
+            }
+            catch (Exception e)
+            {
+                //Console.WriteLine("Exeption: " + e.Message);
+                return false;
+            }
+            //return true;
+        }
+
+        public void Update()
+        {
+            Console.WriteLine("Update Server");
+            Console.WriteLine(this.ClientCMD("update" + Settings.MsgSeperator + "gkclient"));
+            Console.WriteLine("Update Users");
+            Console.WriteLine(this.ClientCMD("users" + Settings.MsgSeperator + "gkclient"));
+            Console.WriteLine("Update Products");
+            Console.WriteLine(this.ClientCMD("prices" + Settings.MsgSeperator + "gkclient"));
+        }
+
+        private Boolean Clienthandle(string name, string answer)
+        {
+            String p1 = name.Substring(0, name.IndexOf(Settings.MsgSeperator));
+
+            switch (p1)
+            {
+                case "users":
+                    try
+                    {
+                        Console.WriteLine("test0: "+answer);
+                        Dictionary<String, Double> dict = String2Dict(answer);
+                        //success!
+                        this.Users = dict;
+                        Console.WriteLine("test1");
+                        return true;
+                    }
+                    catch (Exception e)
+                    {
+                        return false;
+                    }
+                case "update":
+                    return (answer == "done");
+
+                case "prices":
+                    try
+                    {
+                        Dictionary<String, Double> dict = String2Dict(answer);
+                        //success!
+                        this.Products = dict;
+                        return true;
+                    }
+                    catch (Exception e)
+                    {
+                        return false;
+                    }
+
+                case "register":
+                    //not yet Implemented
+                    return true;
+
+                default:
+                    //what happened?
+                    return true;
+            }
+
+            throw new NotImplementedException();
+        }
+
+        public void Close()
+        {
+            client.Close();
+        }
+
+        
+
+        public static String Dict2String(Dictionary<String,Double> dict)
+        {
+            String text = "";
+            Console.WriteLine("Dict-size: " + dict.Count());
+            
+            foreach (KeyValuePair<String, Double> s in dict)
+            {
+                Console.WriteLine("[GetProducts] Product: " + s.Key + " with price: " + s.Value);
+                text = text + s.Key + "=" + s.Value + Settings.MsgSeperator;
+            }
+
+            return text;
+        }
+
+        public static Dictionary<String, Double> String2Dict(String text)
+        {
+            Console.WriteLine("test000: " + text);
+            
+            Dictionary<String, String> dictS = new Dictionary<String, String>();
+
+            dictS = text.Split(new[] {Settings.MsgSeperator}, StringSplitOptions.RemoveEmptyEntries)
+               .Select(part => part.Split('='))
+               .ToDictionary(split => split[0], split => split[1]);
+
+
+            Dictionary<String, Double> dict = new Dictionary<string, double>();
+
+            foreach (KeyValuePair<String, String> s in dictS)
+            {
+                String v = s.Value.Replace('.', ',');
+                dict.Add(s.Key, (Convert.ToDouble(v)));
+            }
+
+            return dict;
+        }
+    }
+}

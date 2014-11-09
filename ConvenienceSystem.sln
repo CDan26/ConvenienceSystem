@@ -1,0 +1,55 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConvenienceBackend", "ConvenienceConsole\ConvenienceBackend.csproj", "{A2E19E07-C128-4087-93FF-E9A565C2BA2A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConvenienceServer", "ConvenienceServer\ConvenienceServer.csproj", "{2A072FFB-A3DE-4013-A074-6F74D41E5B31}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConvenienceClientTest", "ConvenienceClientTest\ConvenienceClientTest.csproj", "{0B95628E-EF8C-4CEE-A222-DA64A63F60CE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConvenienceFormClient", "ConvenienceFormClient\ConvenienceFormClient.csproj", "{FB7ECBE0-E570-4B52-8777-82210211FD9A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConvenienceApp", "ConvenienceApp\ConvenienceApp.csproj", "{3179BE24-6F3E-45A9-90E7-C79ADA21A18B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConvenienceTest", "ConvenienceTest\ConvenienceTest.csproj", "{FE7E771F-A9AD-48E2-9331-A265755B990C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A2E19E07-C128-4087-93FF-E9A565C2BA2A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A2E19E07-C128-4087-93FF-E9A565C2BA2A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A2E19E07-C128-4087-93FF-E9A565C2BA2A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A2E19E07-C128-4087-93FF-E9A565C2BA2A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2A072FFB-A3DE-4013-A074-6F74D41E5B31}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2A072FFB-A3DE-4013-A074-6F74D41E5B31}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2A072FFB-A3DE-4013-A074-6F74D41E5B31}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2A072FFB-A3DE-4013-A074-6F74D41E5B31}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0B95628E-EF8C-4CEE-A222-DA64A63F60CE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0B95628E-EF8C-4CEE-A222-DA64A63F60CE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0B95628E-EF8C-4CEE-A222-DA64A63F60CE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0B95628E-EF8C-4CEE-A222-DA64A63F60CE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FB7ECBE0-E570-4B52-8777-82210211FD9A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FB7ECBE0-E570-4B52-8777-82210211FD9A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FB7ECBE0-E570-4B52-8777-82210211FD9A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FB7ECBE0-E570-4B52-8777-82210211FD9A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3179BE24-6F3E-45A9-90E7-C79ADA21A18B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3179BE24-6F3E-45A9-90E7-C79ADA21A18B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3179BE24-6F3E-45A9-90E7-C79ADA21A18B}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{3179BE24-6F3E-45A9-90E7-C79ADA21A18B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3179BE24-6F3E-45A9-90E7-C79ADA21A18B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3179BE24-6F3E-45A9-90E7-C79ADA21A18B}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{FE7E771F-A9AD-48E2-9331-A265755B990C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FE7E771F-A9AD-48E2-9331-A265755B990C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FE7E771F-A9AD-48E2-9331-A265755B990C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FE7E771F-A9AD-48E2-9331-A265755B990C}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(MonoDevelopProperties) = preSolution
+		StartupItem = ConvenienceFormClient\ConvenienceFormClient.csproj
+	EndGlobalSection
+EndGlobal

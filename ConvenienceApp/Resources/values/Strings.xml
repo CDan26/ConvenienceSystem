@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="Hello">Not Connected. Click to Connect</string>
+    <string name="ApplicationName">ConvenienceApp</string>
+    <string name="ConnectedDescription">Einfach den eigenen Namen auswählen. Danachwerden die Produkte angezeigt.</string>
+    <string name="UserDescription">Test</string>
+    <string name="Vorschlag">Wie wäre es mit Duplos für 20 cent?</string>
+</resources>
