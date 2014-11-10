@@ -46,7 +46,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ConvenienceConsole\ConvenienceBackend.csproj">
-      <Project>{a2e19e07-c128-4087-93ff-e9a565c2ba2a}</Project>
+      <Project>{A2E19E07-C128-4087-93FF-E9A565C2BA2A}</Project>
       <Name>ConvenienceBackend</Name>
     </ProjectReference>
   </ItemGroup>

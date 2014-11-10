@@ -29,6 +29,8 @@ namespace ConvenienceApp
             client = new ConNetClient();
             client.Connect();
             client.Update();
+
+			ConApp.client = client;
             //client.
             
             /*cn = new ConNet(false);
@@ -88,7 +90,13 @@ namespace ConvenienceApp
             list2.Add(new Tuple<string, string>("Test1!", "uTest1"));
             list2.Add(new Tuple<string, string>("Test2!", "uTest2"));
 
-            listview.Adapter = new ArrayAdapter(this, Android.Resource.Layout.SimpleListItemSingleChoice, list);
+			List<String> list3 = new List<string> ();
+			foreach (String s in ConApp.client.Users.Keys)
+			{
+				list3.Add (s);
+			}
+
+            listview.Adapter = new ArrayAdapter(this, Android.Resource.Layout.SimpleListItemSingleChoice, list3);
             listview.BringToFront();
 
             listview.OnItemClickListener = this;
@@ -105,8 +113,9 @@ namespace ConvenienceApp
         public void OnItemClick(AdapterView parent, View view, int position, long id)
         {
             //whatever you need it to do goes here.
-            TextView tv = FindViewById<TextView>(Resource.Id.textView2);
-            tv.Text = "Clicked: " + position;
+            //TextView tv = FindViewById<TextView>(Resource.Id.textView2);
+            //tv.Text = "Clicked: " + position;
+			StartActivity(typeof(ProductActivity));
         }
 
         public void OnPause()

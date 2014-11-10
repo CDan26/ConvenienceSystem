@@ -1,15 +1,20 @@
 ﻿<Properties>
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="ConvenienceFormClient/Form1.Designer.cs">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Android.KitKatTablet" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="ConvenienceApp/ProductActivity.cs">
     <Files>
-      <File FileName="ConvenienceFormClient/Form1.cs" Line="1" Column="1" />
-      <File FileName="ConvenienceFormClient/Program.cs" Line="1" Column="1" />
-      <File FileName="ConvenienceFormClient/State.cs" Line="1" Column="1" />
-      <File FileName="ConvenienceFormClient/Form1.Designer.cs" Line="3" Column="3" />
+      <File FileName="ConvenienceApp/MainActivity.cs" Line="1" Column="1" />
+      <File FileName="ConvenienceApp/ConnectedActivity.cs" Line="1" Column="1" />
+      <File FileName="ConvenienceApp/ConApp.cs" Line="1" Column="1" />
+      <File FileName="ConvenienceApp/ProductActivity.cs" Line="30" Column="30" />
+      <File FileName="ConvenienceApp/ConNetClient.cs" Line="1" Column="1" />
+      <File FileName="ConvenienceApp/Resources/values/Strings.xml" Line="1" Column="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
-    <BreakpointStore />
+    <BreakpointStore>
+      <Breakpoint file="/Users/arno/Dropbox/Visual Studio 2012/Projects/ConvenienceConsole/ConvenienceApp/ConnectedActivity.cs" line="121" column="1" />
+    </BreakpointStore>
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+  <MonoDevelop.Ide.ItemProperties.ConvenienceApp MonoForAntroid.PreferredDevice="7&quot; WSVGA (Tablet)" />
 </Properties>
