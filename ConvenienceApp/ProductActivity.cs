@@ -72,8 +72,10 @@ namespace ConvenienceApp
             tv.Text = "Clicked: " + position;
 			//TODO: List-Position to Product?
 			String s = ConApp.client.Products.Keys.ElementAt (position);
+			this.wantBuy.Add (s);
 			tv.Text = "Clicked: " + s;
         }
+
 
         public void OnPause()
         {

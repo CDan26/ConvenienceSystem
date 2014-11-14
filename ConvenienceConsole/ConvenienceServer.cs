@@ -169,6 +169,13 @@ namespace ConvenienceBackend
             return result;
         }
 
+		private Double GetPrice(String s)
+		{
+			Double p = 0;
+			this.Products.TryGetValue (s, out p);
+			return p;
+		}
+
         public String Register(String name)
         {
             String id = "";
