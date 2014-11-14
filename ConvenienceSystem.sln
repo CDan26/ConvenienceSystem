@@ -47,7 +47,7 @@ Global
 		{FE7E771F-A9AD-48E2-9331-A265755B990C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
-		StartupItem = ConvenienceApp\ConvenienceApp.csproj
+		StartupItem = ConvenienceTest\ConvenienceTest.csproj
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

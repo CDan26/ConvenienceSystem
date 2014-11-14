@@ -4,6 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Data;
 using System.Net.Mail;
+using System.Net;
+using System.Security.Cryptography.X509Certificates;
+using System.Net.Security;
 
 namespace ConvenienceBackend
 {
@@ -32,12 +35,17 @@ namespace ConvenienceBackend
             //client.Credentials = new System.Net.NetworkCredential(Settings.MailUser, Settings.MailPass);
             client.Credentials = new System.Net.NetworkCredential(Settings.MailUser, Settings.MailPass);
             client.EnableSsl = true;
-            mail.Subject = "this is a test email.";
+			//client.ClientCertificates.ServerCertificateValidationCallback = delegate(object s, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors) { return true; };
+			ServicePointManager.ServerCertificateValidationCallback = 
+				delegate(object s, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors) 
+			{ return true; };
+			mail.Subject = "this is a test email.";
             mail.Body = message;
             try
             {
                 Console.WriteLine(client.Credentials.ToString());
                 client.Send(mail);
+				//client.
             }
             catch (Exception e)
             {
