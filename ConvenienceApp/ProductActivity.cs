@@ -14,7 +14,7 @@ using ConvenienceBackend;
 
 namespace ConvenienceApp
 {
-    [Activity(Label = "ConnectedActivity")]
+    [Activity(Label = "Produkte auswaehlen")]
     public class ProductActivity : Activity,ListView.IOnItemClickListener
     {
 		/// <summary>
@@ -30,12 +30,7 @@ namespace ConvenienceApp
 			this.wantBuy = new List<string> ();
             
             ListView listview = FindViewById<ListView>(Resource.Id.listView1);
-            //ListView listview = new ListView(this);
-
-            //listview.SetMinimumWidth(250);
-            //listview.SetMinimumHeight(250);
-            listview.SetBackgroundColor(Android.Graphics.Color.DarkOrange);
-
+            
             
 			List<String> list3 = new List<string> ();
 			foreach (String s in ConApp.client.Products.Keys)
@@ -43,37 +38,103 @@ namespace ConvenienceApp
 				list3.Add (s);
 			}
 
-            List<String> list = new List<string>();
-            List<Tuple<String, String>> list2 = new List<Tuple<string, string>>();
-            list.Add("Test1!");
-            list.Add("Test2!");
-            list2.Add(new Tuple<string, string>("Test1!", "uTest1"));
-            list2.Add(new Tuple<string, string>("Test2!", "uTest2"));
-
             listview.Adapter = new ArrayAdapter(this, Android.Resource.Layout.SimpleListItemSingleChoice, list3);
             listview.BringToFront();
 
             listview.OnItemClickListener = this;
 
-            //ll.AddView(listview, 300, 300);
+			//Add CLick-Listeners
+			Button Resetbutton = FindViewById<Button>(Resource.Id.Button01);
 
-            //listview.ChoiceMode = ChoiceMode.Single;
-            //listview.ItemClick += new EventHandler<AdapterView.ItemClickEventArgs>(listview_ItemClick);
 
-            //SetContentView(Resource.Layout.Connected);
-			//Console.WriteLine ("Size in new Activity: " + ConApp.cc.Products.Count);
+			//button.Click += delegate { button.Text = string.Format("{0} clicks!", count++); };
+			/*Resetbutton.Click += delegate 
+			{ 
+				StartActivity(typeof(ConnectedActivity)); 
+				//var ca = new Intent(this, typeof(ConnectedActivity));
+				//ca.PutExtra("Test", new ConvenienceClient());
+			};*/
+			Resetbutton.Click += delegate
+			{
+				this.wantBuy.Clear ();
+				this.UpdateBuyList ();
+			};
+
+				
+
+			Button BackButton = FindViewById<Button> (Resource.Id.textView1);
+			BackButton.Click += delegate
+			{
+				this.wantBuy.Clear ();
+				StartActivity (typeof(ConnectedActivity));
+			};
+
+
+
+			Button BuyButton = FindViewById<Button> (Resource.Id.Button02);
+			BuyButton.Click += delegate
+			{
+				if (this.wantBuy.Count < 1)
+				{
+					this.alert("Bitte zuerst etwas aussuchen");
+					return;
+				}
+
+				//wait for it...
+				//Buy this stuff!
+				if (ConApp.client.Buy(ConApp.User,this.wantBuy))
+				{
+					//juhu
+					this.wantBuy.Clear();
+					//alert?
+					this.alert("Erfolgreich gekauft");
+					StartActivity (typeof(ConnectedActivity));
+				}
+				else
+				{
+					//doof - alert?
+					this.alert("Fehler - bitte erneut versuchen (Oder Strichliste nutzen)");
+				}
+			};
+
         }
 
 
+		/// <summary>
+		/// Update the textview that displays the current list of products to be bought
+		/// </summary>
+		private void UpdateBuyList()
+		{
+			TextView tv = FindViewById<TextView> (Resource.Id.textView2);
+			String s = "Bitte Produkte waehlen";
+			if (wantBuy.Count < 1)
+			{
+				//do nothing
+			} else
+			{
+				s = "";
+				foreach (String prod in wantBuy)
+				{
+					s += prod + System.Environment.NewLine;
+				}
+			}
+			tv.Text = s;
+		}
+
+		/// <summary>
+		/// Handler for clicking the product. Add the string to the List.
+		/// </summary>
         public void OnItemClick(AdapterView parent, View view, int position, long id)
         {
             //whatever you need it to do goes here.
-            TextView tv = FindViewById<TextView>(Resource.Id.textView2);
-            tv.Text = "Clicked: " + position;
-			//TODO: List-Position to Product?
+            //TextView tv = FindViewById<TextView>(Resource.Id.textView2);
+            //tv.Text = "Clicked: " + position;
+
 			String s = ConApp.client.Products.Keys.ElementAt (position);
 			this.wantBuy.Add (s);
-			tv.Text = "Clicked: " + s;
+
+			this.UpdateBuyList ();
+			//tv.Text = "Clicked: " + s;
         }
 
 
@@ -88,5 +149,19 @@ namespace ConvenienceApp
             base.OnStop();
             //tear down data structures if needed
         }
+
+		public void alert(String msg)
+		{
+			AlertDialog.Builder builder = new AlertDialog.Builder(this);
+			builder.SetTitle(Android.Resource.String.DialogAlertTitle);
+			builder.SetIcon(Android.Resource.Drawable.IcDialogAlert);
+			builder.SetMessage(msg);
+			builder.SetPositiveButton("OK", (sender, e) =>
+			{
+				//nope
+			});
+
+			builder.Show();
+		}
     }
 }

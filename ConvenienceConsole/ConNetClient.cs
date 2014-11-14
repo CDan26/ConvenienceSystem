@@ -38,10 +38,10 @@ namespace ConvenienceBackend
 
 			//Client-Mode
 			//IPAddress ipAddress = Dns.GetHostEntry("auxua.eu").AddressList[0];
-			Console.WriteLine("Set up Connection");
+			//Console.WriteLine("Set up Connection");
 			try { client = new TcpClient(Settings.ServerIP, Settings.Port); }
 			catch (Exception e) { return false; }
-			Console.WriteLine("Connection ready");
+			//Console.WriteLine("Connection ready");
 			try
 			{
 				s = client.GetStream();
@@ -178,6 +178,21 @@ namespace ConvenienceBackend
 		}
 
 
+		public Boolean Buy(List<String> prod)
+		{
+			//create String
+			String s = "buy" + Settings.MsgSeperator + "gkclient";
+			foreach (String p in prod)
+			{
+				s += "" + Settings.MsgSeperator + p;
+			}
+			this.Connect ();
+			Boolean answer = this.ClientCMD (s);
+			this.Close ();
+
+			return answer;
+		}
+
 		/// <summary>
 		/// Converts a Dictionary<String,Double> to a String
 		/// </summary>
@@ -188,7 +203,7 @@ namespace ConvenienceBackend
 
 			foreach (KeyValuePair<String, Double> s in dict)
 			{
-				Console.WriteLine("[GetProducts] Product: " + s.Key + " with price: " + s.Value);
+				//Console.WriteLine("[GetProducts] Product: " + s.Key + " with price: " + s.Value);
 				text = text + s.Key + "=" + s.Value + Settings.MsgSeperator;
 			}
 
@@ -200,7 +215,7 @@ namespace ConvenienceBackend
 		/// </summary>
 		public static Dictionary<String, Double> String2Dict(String text)
 		{
-			Console.WriteLine("test000: " + text);
+			//Console.WriteLine("test000: " + text);
 
 			Dictionary<String, String> dictS = new Dictionary<String, String>();
 

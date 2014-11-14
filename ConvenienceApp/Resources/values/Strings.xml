@@ -6,4 +6,7 @@
     <string name="UserDescription">Test</string>
     <string name="Vorschlag">Wie wäre es mit Duplos für 20 cent?</string>
     <string name="ProdukteGewaehlt">Bitte Produkte waehlen</string>
+    <string name="Reset">RESET (Produkte)</string>
+    <string name="ResetNutzer">Zur Nutzer-Auswahl</string>
+    <string name="Kaufen">Kaufen</string>
 </resources>

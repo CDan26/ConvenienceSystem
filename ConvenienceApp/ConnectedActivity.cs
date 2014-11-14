@@ -14,83 +14,46 @@ using ConvenienceBackend;
 
 namespace ConvenienceApp
 {
-    [Activity(Label = "ConnectedActivity")]
+    [Activity(Label = "Person auswaehlen")]
     public class ConnectedActivity : Activity,ListView.IOnItemClickListener
     {
 
 
         ConNetClient client;
 
+		List<String> list3;
+
         protected override void OnCreate(Bundle bundle)
         {
             base.OnCreate(bundle);
             SetContentView(Resource.Layout.Connected);
 
-            client = new ConNetClient();
-            client.Connect();
-            client.Update();
-
+			try {
+				client = new ConNetClient();
+            	client.Connect();
+            	client.Update();
+				client.Close ();
+			}
+			catch (Exception e)
+			{
+				this.alert ("Verbindung konnte nicht aufgebaut werden. Bitte App beenden und spaeter neu starten!");
+				return;
+			}
 			ConApp.client = client;
-            //client.
+      		ListView listview = FindViewById<ListView>(Resource.Id.listView1);
             
-            /*cn = new ConNet(false);
-            cn.Connect();
-            cn.Update();
-            cn.Close();*/
-            /*
-
-            // Create your application here
-            ListView listview = FindViewById<ListView>(Resource.Id.listView1);
-            ListView lv = new ListView(this);
-
-            
-
-            test = new String[3];
-            test[0] ="1a"; test[1]="2b"; test[2] = "4d";
-
-            ArrayAdapter ListAdapter = new ArrayAdapter<String>(this, Resource.Id.listView1, test);
-            ArrayAdapter LVAdapter = new ArrayAdapter<String>(this, lv.Id, test);
-
-            //ListView.FromArray(test);
-            //listview.Activated = true;
-            //listview.Adapter = ListAdapter;
-            listview.BringToFront();
-            listview.SetBackgroundColor(Android.Graphics.Color.White);
-
-            lv.BringToFront();
-            lv.SetBackgroundColor(Android.Graphics.Color.White);
-             * */
-            ListView listview = FindViewById<ListView>(Resource.Id.listView1);
-            //ListView listview = new ListView(this);
-
-            //listview.SetMinimumWidth(250);
-            //listview.SetMinimumHeight(250);
             listview.SetBackgroundColor(Android.Graphics.Color.DarkOrange);
 
-            //LinearLayout ll = FindViewById<LinearLayout>(Resource.Id.linearLayout1);
-            //ll.AddView(listview);
-
-
-            //var ListSort = WebS.Fetch(Core.AdresID, DateTime.Today.Year, null);
-            //var Sorts = ListSort.Where(i => i.Date >= DateTime.Today).Select(k => k.Sort).ToArray();
-
-            //var Dates = ListSort.Where(i => i.Date >= DateTime.Today).Select(k => k.Date).ToArray();
-
-            /*Dictionary<String, Double> dict = cn.cs.Users;
-            List<String> userList = new List<string>();
-            foreach (KeyValuePair<String, Double> kv in dict)
-            {
-                userList.Add(kv.Key + " (" + kv.Value + ")");
-            }*/
-
+            
+			/*
             List<String> list = new List<string>();
             List<Tuple<String, String>> list2 = new List<Tuple<string, string>>();
             list.Add("Test1!");
             list.Add("Test2!");
             list2.Add(new Tuple<string, string>("Test1!", "uTest1"));
-            list2.Add(new Tuple<string, string>("Test2!", "uTest2"));
+            list2.Add(new Tuple<string, string>("Test2!", "uTest2"));*/
 
-			List<String> list3 = new List<string> ();
+			list3 = new List<string> ();
 			foreach (String s in ConApp.client.Users.Keys)
 			{
 				list3.Add (s);
@@ -101,20 +64,13 @@ namespace ConvenienceApp
 
             listview.OnItemClickListener = this;
 
-            //ll.AddView(listview, 300, 300);
-
-            //listview.ChoiceMode = ChoiceMode.Single;
-            //listview.ItemClick += new EventHandler<AdapterView.ItemClickEventArgs>(listview_ItemClick);
-
-            //SetContentView(Resource.Layout.Connected);
+            
         }
 
 
         public void OnItemClick(AdapterView parent, View view, int position, long id)
         {
-            //whatever you need it to do goes here.
-            //TextView tv = FindViewById<TextView>(Resource.Id.textView2);
-            //tv.Text = "Clicked: " + position;
+			ConApp.User = list3.ElementAt (position);
 			StartActivity(typeof(ProductActivity));
         }
 
@@ -129,5 +85,19 @@ namespace ConvenienceApp
             base.OnStop();
             //tear down data structures if needed
         }
+
+		public void alert(String msg)
+		{
+			AlertDialog.Builder builder = new AlertDialog.Builder(this);
+			builder.SetTitle(Android.Resource.String.DialogAlertTitle);
+			builder.SetIcon(Android.Resource.Drawable.IcDialogAlert);
+			builder.SetMessage(msg);
+			builder.SetPositiveButton("OK", (sender, e) =>
+			{
+				//nope
+			});
+
+			builder.Show();
+		}
     }
 }

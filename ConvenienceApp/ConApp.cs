@@ -17,6 +17,8 @@ namespace ConvenienceApp
 
 		public static ConNetClient client { get; set; }
 
+		public static String User = "";
+
 	}
 }
 

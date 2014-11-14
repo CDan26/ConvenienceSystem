@@ -12,8 +12,8 @@
         p1:layout_height="match_parent"
         p1:id="@+id/listView1"
         p1:background="@android:color/darker_gray" />
-    <TextView
-        p1:text="@string/ConnectedDescription"
+    <Button
+        p1:text="@string/ResetNutzer"
         p1:layout_width="wrap_content"
         p1:layout_height="wrap_content"
         p1:layout_toRightOf="@id/listView1"
@@ -21,9 +21,9 @@
         p1:layout_centerVertical="true"
         p1:layout_alignParentRight="true"
         p1:layout_marginTop="50.0dp"
-        p1:paddingLeft="200dp"
         p1:textSize="30dp"
-        p1:paddingBottom="80dp" />
+        p1:paddingBottom="10dp"
+        p1:background="#ffc02019" />
     <TextView
         p1:text="@string/ProdukteGewaehlt"
         p1:layout_width="wrap_content"
@@ -35,5 +35,32 @@
         p1:layout_alignParentRight="true"
         p1:paddingLeft="100dp"
         p1:paddingTop="10dp"
-        p1:textSize="30dp" />
+        p1:textSize="30dp"
+        p1:layout_marginTop="40dp" />
+    <Button
+        p1:text="@string/Reset"
+        p1:layout_width="wrap_content"
+        p1:layout_height="wrap_content"
+        p1:id="@+id/Button01"
+        p1:layout_toRightOf="@id/listView1"
+        p1:layout_centerHorizontal="false"
+        p1:layout_alignParentRight="true"
+        p1:paddingLeft="1dp"
+        p1:paddingTop="10dp"
+        p1:textSize="30dp"
+        p1:layout_marginBottom="30dp"
+        p1:background="#ffdbc712" />
+    <Button
+        p1:text="@string/Kaufen"
+        p1:layout_width="wrap_content"
+        p1:layout_height="wrap_content"
+        p1:layout_below="@id/Button01"
+        p1:id="@+id/Button02"
+        p1:layout_toRightOf="@id/listView1"
+        p1:layout_centerHorizontal="false"
+        p1:layout_alignParentRight="true"
+        p1:paddingLeft="1dp"
+        p1:textSize="30dp"
+        p1:layout_above="@id/textView1"
+        p1:background="#ff127d2a" />
 </RelativeLayout>

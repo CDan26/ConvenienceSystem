@@ -36,7 +36,7 @@ namespace ConvenienceBackend
                 Console.WriteLine("Starting Server");
                 //IPAddress ipAddress = Dns.GetHostEntry("localhost").AddressList[0];
                 //TcpListener listener = new TcpListener(ipAddress,4012);
-                listener = new TcpListener(IPAddress.Any, 4012);
+				listener = new TcpListener(IPAddress.Any, Settings.Port);
                 Console.WriteLine("Starting Listener");
 
                 listener.Start();
@@ -119,6 +119,7 @@ namespace ConvenienceBackend
             String p2 = handle.Substring(index+1);
             //TODO: switch/case for handles
             Console.WriteLine("p1: " + p1);
+			Console.WriteLine ("p2: " + p2);
             switch (p1)
             {
                 case "register":
@@ -142,17 +143,19 @@ namespace ConvenienceBackend
                     Dictionary<String, Double> dictuser = cs.GetUserDict();
                     answer = Dict2String(dictuser);
                     return true;
-                case "buy":
-                    Console.WriteLine("Buying stuff");
-                    String[] words = p2.Split(new Char[] { Settings.MsgSeperator });
-                    List<String> list = new List<string>();
-                    for (int i = 2; i < words.Length; i++)
-                    {
-                        list.Add(words[i]);
-                    }
-                    Boolean a = this.cs.Buy(words[1], list);
-                    answer = "done";
-                    return a;
+
+				case "buy":
+					Console.WriteLine ("Buying stuff");
+					String[] words = p2.Split (new Char[] { Settings.MsgSeperator });
+					List<String> list = new List<string> ();
+					for (int i = 2; i < words.Length; i++)
+					{
+						list.Add (words [i]);
+					}
+					Console.WriteLine ("list: " + list.ToString ());
+		            Boolean a = this.cs.Buy(words[1], list);
+		            answer = "done";
+		            return a;
 
                 default:
                     Console.Write("Invalid Command: "+handle+" in ("+p1+","+p2+")");

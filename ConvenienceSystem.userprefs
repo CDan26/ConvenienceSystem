@@ -1,26 +1,15 @@
 ﻿<Properties>
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="ConvenienceApp/MainActivity.cs">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Android.KitKatTablet" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="ConvenienceConsole/ConvenienceServer.cs">
     <Files>
-      <File FileName="ConvenienceApp/MainActivity.cs" Line="30" Column="30" />
-      <File FileName="ConvenienceApp/ConnectedActivity.cs" Line="1" Column="1" />
-      <File FileName="ConvenienceApp/ConApp.cs" Line="1" Column="1" />
-      <File FileName="ConvenienceApp/ProductActivity.cs" Line="3" Column="3" />
-      <File FileName="ConvenienceApp/Resources/values/Strings.xml" Line="1" Column="1" />
-      <File FileName="ConvenienceTest/Program.cs" Line="20" Column="20" />
-      <File FileName="ConvenienceConsole/Settings.cs" Line="62" Column="62" />
-      <File FileName="ConvenienceConsole/ConvenienceClient.cs" Line="18" Column="18" />
-      <File FileName="ConvenienceConsole/ConNetClient.cs" Line="1" Column="1" />
+      <File FileName="ConvenienceApp/ProductActivity.cs" Line="1" Column="1" />
       <File FileName="ConvenienceConsole/ConNetServer.cs" Line="1" Column="1" />
-      <File FileName="ConvenienceApp/ConvenienceClient.cs" Line="1" Column="1" />
-      <File FileName="ConvenienceConsole/ConvenienceServer.cs" Line="13" Column="13" />
+      <File FileName="ConvenienceConsole/ConvenienceServer.cs" Line="1" Column="1" />
       <File FileName="ConvenienceApp/ConNetClient.cs" Line="1" Column="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
-    <BreakpointStore>
-      <Breakpoint file="/Users/arno/Dropbox/Visual Studio 2012/Projects/ConvenienceConsole/ConvenienceApp/ConnectedActivity.cs" line="121" column="1" />
-    </BreakpointStore>
+    <BreakpointStore />
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />
   <MonoDevelop.Ide.ItemProperties.ConvenienceApp MonoForAntroid.PreferredDevice="7&quot; WSVGA (Tablet)" />

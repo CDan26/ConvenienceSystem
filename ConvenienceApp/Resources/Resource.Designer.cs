@@ -60,6 +60,12 @@ namespace ConvenienceApp
 		public partial class Id
 		{
 			
+			// aapt resource value: 0x7f050005
+			public const int Button01 = 2131034117;
+			
+			// aapt resource value: 0x7f050006
+			public const int Button02 = 2131034118;
+			
 			// aapt resource value: 0x7f050004
 			public const int MyButton = 2131034116;
 			
@@ -119,8 +125,17 @@ namespace ConvenienceApp
 			// aapt resource value: 0x7f040000
 			public const int Hello = 2130968576;
 			
+			// aapt resource value: 0x7f040008
+			public const int Kaufen = 2130968584;
+			
 			// aapt resource value: 0x7f040005
 			public const int ProdukteGewaehlt = 2130968581;
+			
+			// aapt resource value: 0x7f040006
+			public const int Reset = 2130968582;
+			
+			// aapt resource value: 0x7f040007
+			public const int ResetNutzer = 2130968583;
 			
 			// aapt resource value: 0x7f040003
 			public const int UserDescription = 2130968579;
