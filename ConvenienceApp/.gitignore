@@ -185,3 +185,6 @@ FakesAssemblies/
 
 # Settings of the project
 Settings.cs
+
+# Android packages
+*.apk

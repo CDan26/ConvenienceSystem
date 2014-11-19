@@ -4,7 +4,7 @@
     <string name="ApplicationName">ConvenienceApp</string>
     <string name="ConnectedDescription">Einfach den eigenen Namen auswählen. Danach werden die Produkte angezeigt.</string>
     <string name="UserDescription">Test</string>
-    <string name="Vorschlag">Wie wäre es mit Duplos für 20 cent?</string>
+    <string name="Vorschlag">Diese App ergaenzt nur die Liste! Im Zweifelsfall gilt die Liste!</string>
     <string name="ProdukteGewaehlt">Bitte Produkte waehlen</string>
     <string name="Reset">RESET (Produkte)</string>
     <string name="ResetNutzer">Zur Nutzer-Auswahl</string>

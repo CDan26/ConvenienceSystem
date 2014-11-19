@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Data;
 
 using Android.App;
 using Android.Content;
@@ -33,8 +34,15 @@ namespace ConvenienceApp
             
             
 			List<String> list3 = new List<string> ();
-			foreach (String s in ConApp.client.Products.Keys)
+			/*foreach (String s in ConApp.client.Products.Keys)
 			{
+				list3.Add (s);
+			}*/
+
+			foreach (KeyValuePair<String,Double> kv in ConApp.client.Products) 
+			{
+				double d = kv.Value;
+				String s = kv.Key + " (" + kv.Value.ToString("F") + ")";
 				list3.Add (s);
 			}
 
@@ -87,8 +95,8 @@ namespace ConvenienceApp
 					//juhu
 					this.wantBuy.Clear();
 					//alert?
-					this.alert("Erfolgreich gekauft");
-					StartActivity (typeof(ConnectedActivity));
+					this.alertBack("Erfolgreich gekauft");
+
 				}
 				else
 				{
@@ -115,7 +123,8 @@ namespace ConvenienceApp
 				s = "";
 				foreach (String prod in wantBuy)
 				{
-					s += prod + System.Environment.NewLine;
+					//s += prod + System.Environment.NewLine;
+					s += prod + ", " ;
 				}
 			}
 			tv.Text = s;
@@ -159,6 +168,20 @@ namespace ConvenienceApp
 			builder.SetPositiveButton("OK", (sender, e) =>
 			{
 				//nope
+			});
+
+			builder.Show();
+		}
+
+		public void alertBack(String msg)
+		{
+			AlertDialog.Builder builder = new AlertDialog.Builder(this);
+			builder.SetTitle(Android.Resource.String.DialogAlertTitle);
+			builder.SetIcon(Android.Resource.Drawable.IcDialogAlert);
+			builder.SetMessage(msg);
+			builder.SetPositiveButton("OK", (sender, e) =>
+			{
+				StartActivity (typeof(ConnectedActivity));
 			});
 
 			builder.Show();

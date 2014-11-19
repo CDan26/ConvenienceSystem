@@ -229,8 +229,16 @@ namespace ConvenienceBackend
 
 			foreach (KeyValuePair<String, String> s in dictS)
 			{
+				/**
+				 * 
+				 * Known Issue!
+				 * This This replace functionality makes the Conversion invalid in the Android eulator, but it works only (!) this way on real pads...
+				 * 
+				 **/
 				String v = s.Value.Replace('.', ',');
+				//String v = s.Value;
 				dict.Add(s.Key, (Convert.ToDouble(v)));
+				//Console.WriteLine("s2d: ("+v+") "+(Convert.ToDouble(v)).ToString("R"));
 			}
 
 			return dict;
