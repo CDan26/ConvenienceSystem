@@ -15,11 +15,13 @@ namespace ConvenienceBackend
 
         public Dictionary<String,Double> Users;
         public Dictionary<String, Double> Products;
+        public Dictionary<String, String> Mails;
 
         public ConvenienceServer()
         {
             Users = new Dictionary<string, double>();
             Products = new Dictionary<string, double>();
+            Mails = new Dictionary<string, string>();
         }
 
         private void Connect()
@@ -37,6 +39,7 @@ namespace ConvenienceBackend
             this.Connect();
             this.GetUsers();
             this.GetProducts();
+            this.GetMails();
             this.Close();
         }
 
@@ -57,6 +60,8 @@ namespace ConvenienceBackend
             this.GetUsers();
             Console.WriteLine("[Test] starting Query GetProducts");
             this.GetProducts();
+            Console.WriteLine("[Test] starting Query GetMails");
+            this.GetMails();
             Console.WriteLine("[Test] Test finished");
         }
 
@@ -115,6 +120,12 @@ namespace ConvenienceBackend
             return this.Products;
         }
 
+        public Dictionary<String, String> GetMailsDict()
+        {
+            if (this.Mails == null) return null;
+            return this.Mails;
+        }
+
         private void GetProducts()
         {
             MySqlDataReader reader = this.Query("SELECT * FROM gk_pricing ORDER BY product ASC LIMIT 0,200");
@@ -125,6 +136,27 @@ namespace ConvenienceBackend
                     Products.Remove(reader.GetString("product"));
                 }
                 Products.Add(reader.GetString("product"),reader.GetDouble("price"));
+            }
+
+            //Debug
+            /*foreach (KeyValuePair<String, Double> s in Products)
+            {
+                Console.WriteLine("[GetProducts] Product: " + s.Key + " with price: " + s.Value);
+            }*/
+            reader.Close();
+        }
+
+        private void GetMails()
+        {
+            
+            MySqlDataReader reader = this.Query("SELECT * FROM gk_mail WHERE active='true'");
+            while (reader.Read())
+            {
+                if (Mails.ContainsKey(reader.GetString("username")))
+                {
+                    Mails.Remove(reader.GetString("username"));
+                }
+                Mails.Add(reader.GetString("username"), reader.GetString("adress"));
             }
 
             //Debug

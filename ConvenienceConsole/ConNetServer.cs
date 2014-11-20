@@ -5,6 +5,7 @@ using System.Text;
 using System.Net;
 using System.Net.Sockets;
 using System.IO;
+using System.Net.Mail;
 
 namespace ConvenienceBackend
 {
@@ -154,6 +155,11 @@ namespace ConvenienceBackend
 					}
 					Console.WriteLine ("list: " + list.ToString ());
 		            Boolean a = this.cs.Buy(words[1], list);
+                    if (a)
+                    {
+                        //send mail!
+                        this.BuyMail(words[1], list);
+                    }
 		            answer = "done";
 		            return a;
 
@@ -164,6 +170,60 @@ namespace ConvenienceBackend
                     
             }
 
+        }
+
+        private void BuyMail(string p, List<string> list)
+        {
+            //get mail for user
+            String mail;
+            try
+            {
+                mail = this.cs.GetMailsDict()["username"];
+            }
+            catch (KeyNotFoundException)
+            {
+                //no mail adress known for this person -> return
+                return;
+            }
+
+            String msg = "Hallo " + p + ", " + System.Environment.NewLine + System.Environment.NewLine;
+            msg += "Du hast gerade Prdukte gekauft: " + System.Environment.NewLine;
+            foreach (String s in list)
+            {
+                msg += s + " fuer " + this.cs.GetProductsDict()[s] + System.Environment.NewLine;
+            }
+            msg += "Bitte beachte, dass die Daten nur sporadisch aktualisiert werden. Bei Fragen wende dich einfach an: " + Settings.Contactmail + System.Environment.NewLine;
+            msg += "Vielen Dank und guten Durst/Appetit, " + System.Environment.NewLine + "Deine Getraenkekasse";
+
+            this.SendMail(mail, msg);
+
+            
+        }
+
+        public Boolean SendMail(String to, String message)
+        {
+            MailMessage mail = new MailMessage(Settings.MailFrom, to);
+            SmtpClient client = new SmtpClient();
+            client.Port = Settings.MailPort;
+            client.DeliveryMethod = SmtpDeliveryMethod.Network;
+            client.UseDefaultCredentials = false;
+            client.Host = Settings.MailSMTPHost;
+            //client.Credentials = new System.Net.NetworkCredential(Settings.MailUser, Settings.MailPass);
+            client.Credentials = new System.Net.NetworkCredential(Settings.MailUser, Settings.MailPass);
+            client.EnableSsl = true;
+            mail.Subject = "this is a test email.";
+            mail.Body = message;
+            try
+            {
+                Console.WriteLine(client.Credentials.ToString());
+                client.Send(mail);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Fail: " + e.Message);
+            }
+
+            return true;
         }
 
         public static String Dict2String(Dictionary<String,Double> dict)

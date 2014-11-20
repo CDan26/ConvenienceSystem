@@ -1,6 +1,6 @@
 ConvenienceSystem
 
-This project is a simple project for ConvenienceSystems (Getränkekassen, z.B.).
+This project is a simple project for ConvenienceSystems (Getraenkekassen, z.B.).
 
 The Project is written in C# and uses Xamarin.Android for the App.
 
@@ -10,13 +10,12 @@ The sub-projects:
 * ConcenienceConsole/ConvenienceBackend: The logic of the backend of the system
 * ConvenienceFormClient: A Client based on WinForms
 * ConvenienceServer: The server part of the system
-* ConvenienceTest: A (legacy) testing subproject
 
 Known Issues:
 * On Mono 3.10. on OS X 10.10 the Winforms will not work du to a bug in Mono
 
 Further requirements:
-* MySQL Database (struct will be explained later on... maybe..)
+* MySQL Database (struct can be found in ConvenienceDB.sql)
 * MySQL .NET Drivers (just google for it, you will find the DLLs)
 * Xamarin.Adnroid (for the Adnroid App)
 

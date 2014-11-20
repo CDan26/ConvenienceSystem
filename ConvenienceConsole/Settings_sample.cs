@@ -10,7 +10,7 @@ namespace ConvenienceBackend
         public static readonly String Server = "";
         public static readonly String ServerIP = "";
         public static readonly int Port = 0;
-        public static readonly char MsgSeperator = '';
+        public static readonly char MsgSeperator = ' ';
         public static readonly string MsgInvalid = "_MsGInvalid_";
 
         public static readonly String DBName = "";
@@ -26,6 +26,8 @@ namespace ConvenienceBackend
         public static readonly string MailSMTPHost = "";
         public static readonly String MailUser = "";
         public static readonly String MailPass = "";
+        
+        public static readonly String Contactmail = "";
 
     }
 }
