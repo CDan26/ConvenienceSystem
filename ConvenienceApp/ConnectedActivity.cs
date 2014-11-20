@@ -21,7 +21,7 @@ namespace ConvenienceApp
 
         ConNetClient client;
 
-		List<String> list3;
+		List<KeyValuePair<String,Double>> list4;
 
         protected override void OnCreate(Bundle bundle)
         {
@@ -42,7 +42,7 @@ namespace ConvenienceApp
 			ConApp.client = client;
       		ListView listview = FindViewById<ListView>(Resource.Id.listView1);
             
-            listview.SetBackgroundColor(Android.Graphics.Color.DarkOrange);
+            //listview.SetBackgroundColor(Android.Graphics.Color.DarkOrange);
 
             
 			/*
@@ -52,7 +52,7 @@ namespace ConvenienceApp
             list.Add("Test2!");
             list2.Add(new Tuple<string, string>("Test1!", "uTest1"));
             list2.Add(new Tuple<string, string>("Test2!", "uTest2"));*/
-
+            /*
 			list3 = new List<string> ();
 			foreach (String s in ConApp.client.Users.Keys)
 			{
@@ -60,6 +60,17 @@ namespace ConvenienceApp
 			}
 
             listview.Adapter = new ArrayAdapter(this, Android.Resource.Layout.SimpleListItemSingleChoice, list3);
+            */
+
+            //List<KeyValuePair<String, Double>> list4 = new List<KeyValuePair<string, double>>();
+			list4 = new List<KeyValuePair<string, double>>();
+            foreach (KeyValuePair<String, Double> kv in ConApp.client.Users)
+            {
+                list4.Add(kv);
+            }
+
+            listview.Adapter = new TwoLineAdapter(this, list4);
+
             listview.BringToFront();
 
             listview.OnItemClickListener = this;
@@ -70,7 +81,8 @@ namespace ConvenienceApp
 
         public void OnItemClick(AdapterView parent, View view, int position, long id)
         {
-			ConApp.User = list3.ElementAt (position);
+			//ConApp.User = list3.ElementAt (position);
+			ConApp.User = list4.ElementAt (position).Key;
 			StartActivity(typeof(ProductActivity));
         }
 

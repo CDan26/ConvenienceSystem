@@ -232,7 +232,7 @@ namespace ConvenienceBackend
 				/**
 				 * 
 				 * Known Issue!
-				 * This This replace functionality makes the Conversion invalid in the Android eulator, but it works only (!) this way on real pads...
+				 * This This replace functionality makes the Conversion invalid in the Android emulator, but it works only (!) this way on real pads...
 				 * 
 				 **/
 				String v = s.Value.Replace('.', ',');

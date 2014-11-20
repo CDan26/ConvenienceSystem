@@ -69,6 +69,15 @@ namespace ConvenienceApp
 			// aapt resource value: 0x7f050004
 			public const int MyButton = 2131034116;
 			
+			// aapt resource value: 0x7f050007
+			public const int TText = 2131034119;
+			
+			// aapt resource value: 0x7f050008
+			public const int TText1 = 2131034120;
+			
+			// aapt resource value: 0x7f050009
+			public const int TText2 = 2131034121;
+			
 			// aapt resource value: 0x7f050001
 			public const int listView1 = 2131034113;
 			
@@ -102,6 +111,9 @@ namespace ConvenienceApp
 			
 			// aapt resource value: 0x7f030002
 			public const int Products = 2130903042;
+			
+			// aapt resource value: 0x7f030003
+			public const int TwoLineView = 2130903043;
 			
 			static Layout()
 			{

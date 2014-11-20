@@ -31,6 +31,7 @@ namespace ConvenienceApp
 			this.wantBuy = new List<string> ();
             
             ListView listview = FindViewById<ListView>(Resource.Id.listView1);
+
             
             
 			List<String> list3 = new List<string> ();
@@ -38,7 +39,7 @@ namespace ConvenienceApp
 			{
 				list3.Add (s);
 			}*/
-
+            /*
 			foreach (KeyValuePair<String,Double> kv in ConApp.client.Products) 
 			{
 				double d = kv.Value;
@@ -47,6 +48,15 @@ namespace ConvenienceApp
 			}
 
             listview.Adapter = new ArrayAdapter(this, Android.Resource.Layout.SimpleListItemSingleChoice, list3);
+            */
+            List<KeyValuePair<String, Double>> list4 = new List<KeyValuePair<string, double>>();
+            foreach (KeyValuePair<String, Double> kv in ConApp.client.Products)
+            {
+                list4.Add(kv);
+            }
+
+            listview.Adapter = new TwoLineAdapter(this, list4);
+
             listview.BringToFront();
 
             listview.OnItemClickListener = this;
