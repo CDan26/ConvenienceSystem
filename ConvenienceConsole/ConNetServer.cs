@@ -79,7 +79,7 @@ namespace ConvenienceBackend
                     }
                     catch (Exception e)
                     {
-                        Console.WriteLine("Fail: " + e.Message);
+                        Console.WriteLine("Connect-Fail: " + e.Message);
                         
                         if (FailFlag)
                         {
@@ -158,6 +158,7 @@ namespace ConvenienceBackend
                     if (a)
                     {
                         //send mail!
+                        Console.WriteLine("Send mail to " + words[1]);
                         this.BuyMail(words[1], list);
                     }
 		            answer = "done";
@@ -176,13 +177,22 @@ namespace ConvenienceBackend
         {
             //get mail for user
             String mail;
+            Console.WriteLine("DebugMail ("+p+")");
+            Dictionary<String, String> dict = this.cs.GetMailsDict();
+            foreach (KeyValuePair<String, String> kv in dict)
+            {
+                Console.WriteLine(kv.Key + " : " + kv.Value);
+            }
+            Console.WriteLine("End kv-list");
             try
             {
-                mail = this.cs.GetMailsDict()["username"];
+                dict.TryGetValue(p, out mail);
+                //mail = this.cs.GetMailsDict()[p];
             }
-            catch (KeyNotFoundException)
+            catch (Exception e)
             {
                 //no mail adress known for this person -> return
+                Console.WriteLine("BuyMail-Fail: " + e.Message);
                 return;
             }
 
@@ -190,7 +200,10 @@ namespace ConvenienceBackend
             msg += "Du hast gerade Prdukte gekauft: " + System.Environment.NewLine;
             foreach (String s in list)
             {
-                msg += s + " fuer " + this.cs.GetProductsDict()[s] + System.Environment.NewLine;
+                Console.WriteLine("buy: " + s);
+                Double prod;
+                if (this.cs.GetProductsDict().TryGetValue(s, out prod))
+                    msg += s + " fuer " + this.cs.GetProductsDict()[s] + System.Environment.NewLine;
             }
             msg += "Bitte beachte, dass die Daten nur sporadisch aktualisiert werden. Bei Fragen wende dich einfach an: " + Settings.Contactmail + System.Environment.NewLine;
             msg += "Vielen Dank und guten Durst/Appetit, " + System.Environment.NewLine + "Deine Getraenkekasse";
@@ -202,6 +215,8 @@ namespace ConvenienceBackend
 
         public Boolean SendMail(String to, String message)
         {
+            Console.WriteLine("Now, Sending Mail!");
+            ServicePointManager.ServerCertificateValidationCallback = (sender, certificate, chain, sslPolicyErrors) => true;
             MailMessage mail = new MailMessage(Settings.MailFrom, to);
             SmtpClient client = new SmtpClient();
             client.Port = Settings.MailPort;
@@ -211,7 +226,7 @@ namespace ConvenienceBackend
             //client.Credentials = new System.Net.NetworkCredential(Settings.MailUser, Settings.MailPass);
             client.Credentials = new System.Net.NetworkCredential(Settings.MailUser, Settings.MailPass);
             client.EnableSsl = true;
-            mail.Subject = "this is a test email.";
+            mail.Subject = "Kauf im Getraenkekassen-System";
             mail.Body = message;
             try
             {
@@ -220,7 +235,7 @@ namespace ConvenienceBackend
             }
             catch (Exception e)
             {
-                Console.WriteLine("Fail: " + e.Message);
+                Console.WriteLine("Mail-Fail: " + e.Message);
             }
 
             return true;
