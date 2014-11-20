@@ -34,7 +34,7 @@ namespace ConvenienceApp
             	client.Update();
 				client.Close ();
 			}
-			catch (Exception e)
+			catch (Exception)
 			{
 				this.alert ("Verbindung konnte nicht aufgebaut werden. Bitte App beenden und spaeter neu starten!");
 				return;
@@ -86,13 +86,13 @@ namespace ConvenienceApp
 			StartActivity(typeof(ProductActivity));
         }
 
-        public void OnPause()
+        protected override void OnPause()
         {
             base.OnPause();
             //tear down Connection if needed
         }
 
-        public void OnStop()
+        protected override void OnStop()
         {
             base.OnStop();
             //tear down data structures if needed

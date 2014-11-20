@@ -40,7 +40,7 @@ namespace ConvenienceBackend
 			//IPAddress ipAddress = Dns.GetHostEntry("auxua.eu").AddressList[0];
 			//Console.WriteLine("Set up Connection");
 			try { client = new TcpClient(Settings.ServerIP, Settings.Port); }
-			catch (Exception e) { return false; }
+			catch (Exception) { return false; }
 			//Console.WriteLine("Connection ready");
 			try
 			{
@@ -94,7 +94,7 @@ namespace ConvenienceBackend
 				Console.WriteLine("a: " + answer);
 				return this.Clienthandle(command, answer);
 			}
-			catch (Exception e)
+			catch (Exception)
 			{
 				//Console.WriteLine("Exeption: " + e.Message);
 				return false;
@@ -137,7 +137,7 @@ namespace ConvenienceBackend
 					Console.WriteLine("test1");
 					return true;
 				}
-				catch (Exception e)
+				catch (Exception)
 				{
 					return false;
 				}
@@ -152,7 +152,7 @@ namespace ConvenienceBackend
 					this.Products = dict;
 					return true;
 				}
-				catch (Exception e)
+				catch (Exception)
 				{
 					return false;
 				}

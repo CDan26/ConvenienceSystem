@@ -157,13 +157,13 @@ namespace ConvenienceApp
         }
 
 
-        public void OnPause()
+        protected override void OnPause()
         {
             base.OnPause();
             //tear down Connection if needed
         }
 
-        public void OnStop() 
+        protected override void OnStop() 
         {
             base.OnStop();
             //tear down data structures if needed
