@@ -36,8 +36,8 @@ namespace ConvenienceApp
 			}
 			catch (Exception)
 			{
-				this.alert ("Verbindung konnte nicht aufgebaut werden. Bitte App beenden und spaeter neu starten!");
-				return;
+                this.BackConnectAlert("Verbindung konnte nicht aufgebaut werden. Bitte App beenden und spaeter neu starten!");
+                return;
 			}
 			ConApp.client = client;
       		ListView listview = FindViewById<ListView>(Resource.Id.listView1);
@@ -98,6 +98,9 @@ namespace ConvenienceApp
             //tear down data structures if needed
         }
 
+        /// <summary>
+        /// Just display a message and an OK-Button
+        /// </summary>
 		public void alert(String msg)
 		{
 			AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -111,5 +114,22 @@ namespace ConvenienceApp
 
 			builder.Show();
 		}
+
+        /// <summary>
+        /// Display a message. Clicking OK triggers going back to the MainActivity
+        /// </summary>
+        public void BackConnectAlert(String msg)
+        {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.SetTitle(Android.Resource.String.DialogAlertTitle);
+            builder.SetIcon(Android.Resource.Drawable.IcDialogAlert);
+            builder.SetMessage(msg);
+            builder.SetPositiveButton("OK", (sender, e) =>
+            {
+                StartActivity(typeof(MainActivity));
+            });
+
+            builder.Show();
+        }
     }
 }

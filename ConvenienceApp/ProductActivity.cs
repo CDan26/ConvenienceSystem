@@ -125,9 +125,12 @@ namespace ConvenienceApp
 		{
 			TextView tv = FindViewById<TextView> (Resource.Id.textView2);
 			String s = "Bitte Produkte waehlen";
-			if (wantBuy.Count < 1)
+            Double price = 0.0;
+            Button BuyButton = FindViewById<Button>(Resource.Id.Button02);
+            if (wantBuy.Count < 1)
 			{
 				//do nothing
+                BuyButton.Text = "Kaufen";
 			} else
 			{
 				s = "";
@@ -135,9 +138,11 @@ namespace ConvenienceApp
 				{
 					//s += prod + System.Environment.NewLine;
 					s += prod + ", " ;
+                    price += ConApp.client.Products[s];
 				}
 			}
 			tv.Text = s;
+            BuyButton.Text = "Kaufen (" + price + ")";
 		}
 
 		/// <summary>
