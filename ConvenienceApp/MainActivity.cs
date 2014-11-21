@@ -12,6 +12,9 @@ using Android.OS;
 
 namespace ConvenienceApp
 {
+    /// <summary>
+    /// The Main or startup-Activity. Waits for the user to tell the App to connect to the server.
+    /// </summary>
     [Activity(Label = "ConvenienceApp", MainLauncher = true, Icon = "@drawable/icon")]
     public class MainActivity : Activity
     {
@@ -29,18 +32,17 @@ namespace ConvenienceApp
             Button button = FindViewById<Button>(Resource.Id.MyButton);
 
             
-            //button.Click += delegate { button.Text = string.Format("{0} clicks!", count++); };
+            // On Button-Click go to the next Activity!
             button.Click += delegate 
             { 
                 StartActivity(typeof(ConnectedActivity)); 
-                //var ca = new Intent(this, typeof(ConnectedActivity));
-                //ca.PutExtra("Test", new ConvenienceClient());
             };
 
-            //test(null);
         }
 
-
+        /// <summary>
+        /// Some kind of "historic" test method for Dialogues.
+        /// </summary>
 		public void test(Action<bool> callback, String msg)
         {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);

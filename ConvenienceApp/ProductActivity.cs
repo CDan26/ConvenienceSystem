@@ -15,6 +15,9 @@ using ConvenienceBackend;
 
 namespace ConvenienceApp
 {
+    /// <summary>
+    /// The User has been selected and now, the App waits for the products to be bought.
+    /// </summary>
     [Activity(Label = "Produkte auswaehlen")]
     public class ProductActivity : Activity,ListView.IOnItemClickListener
     {
@@ -32,23 +35,7 @@ namespace ConvenienceApp
             
             ListView listview = FindViewById<ListView>(Resource.Id.listView1);
 
-            
-            
-			List<String> list3 = new List<string> ();
-			/*foreach (String s in ConApp.client.Products.Keys)
-			{
-				list3.Add (s);
-			}*/
-            /*
-			foreach (KeyValuePair<String,Double> kv in ConApp.client.Products) 
-			{
-				double d = kv.Value;
-				String s = kv.Key + " (" + kv.Value.ToString("F") + ")";
-				list3.Add (s);
-			}
-
-            listview.Adapter = new ArrayAdapter(this, Android.Resource.Layout.SimpleListItemSingleChoice, list3);
-            */
+		    // Fill the ListView!
             List<KeyValuePair<String, Double>> list4 = new List<KeyValuePair<string, double>>();
             foreach (KeyValuePair<String, Double> kv in ConApp.client.Products)
             {
@@ -59,19 +46,13 @@ namespace ConvenienceApp
 
             listview.BringToFront();
 
+            // Set the Click-Listener... It's me!
             listview.OnItemClickListener = this;
 
 			//Add CLick-Listeners
 			Button Resetbutton = FindViewById<Button>(Resource.Id.Button01);
 
-
-			//button.Click += delegate { button.Text = string.Format("{0} clicks!", count++); };
-			/*Resetbutton.Click += delegate 
-			{ 
-				StartActivity(typeof(ConnectedActivity)); 
-				//var ca = new Intent(this, typeof(ConnectedActivity));
-				//ca.PutExtra("Test", new ConvenienceClient());
-			};*/
+            // Reset: clear products and Update
 			Resetbutton.Click += delegate
 			{
 				this.wantBuy.Clear ();
@@ -79,8 +60,8 @@ namespace ConvenienceApp
 			};
 
 				
-
 			Button BackButton = FindViewById<Button> (Resource.Id.textView1);
+            // Back: Clear products and go back one Activity
 			BackButton.Click += delegate
 			{
 				this.wantBuy.Clear ();
@@ -90,6 +71,7 @@ namespace ConvenienceApp
 
 
 			Button BuyButton = FindViewById<Button> (Resource.Id.Button02);
+            //Buy: Buy this stuff, send to Server and go back one Activity
 			BuyButton.Click += delegate
 			{
 				if (this.wantBuy.Count < 1)

@@ -12,6 +12,10 @@ using Android.Widget;
 
 namespace ConvenienceApp
 {
+    /// <summary>
+    /// A special Listview for this Purpose.
+    /// Consists of two Textviews, so we can display name and price, e.g.
+    /// </summary>
     public class TwoLineAdapter : BaseAdapter<KeyValuePair<String,Double>>
     {
        List<KeyValuePair<String,Double>> items;

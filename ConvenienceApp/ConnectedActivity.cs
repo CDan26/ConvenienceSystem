@@ -14,11 +14,13 @@ using ConvenienceBackend;
 
 namespace ConvenienceApp
 {
+    /// <summary>
+    /// System is connected and waiting for user selection
+    /// </summary>
     [Activity(Label = "Person auswaehlen")]
     public class ConnectedActivity : Activity,ListView.IOnItemClickListener
     {
-
-
+        
         ConNetClient client;
 
 		List<KeyValuePair<String,Double>> list4;
@@ -28,6 +30,8 @@ namespace ConvenienceApp
             base.OnCreate(bundle);
             SetContentView(Resource.Layout.Connected);
 
+            // Try to connect to the ConvenienceServer.
+            // When not successfull, tell the user and go back!
 			try {
 				client = new ConNetClient();
             	client.Connect();
@@ -42,27 +46,7 @@ namespace ConvenienceApp
 			ConApp.client = client;
       		ListView listview = FindViewById<ListView>(Resource.Id.listView1);
             
-            //listview.SetBackgroundColor(Android.Graphics.Color.DarkOrange);
-
-            
-			/*
-            List<String> list = new List<string>();
-            List<Tuple<String, String>> list2 = new List<Tuple<string, string>>();
-            list.Add("Test1!");
-            list.Add("Test2!");
-            list2.Add(new Tuple<string, string>("Test1!", "uTest1"));
-            list2.Add(new Tuple<string, string>("Test2!", "uTest2"));*/
-            /*
-			list3 = new List<string> ();
-			foreach (String s in ConApp.client.Users.Keys)
-			{
-				list3.Add (s);
-			}
-
-            listview.Adapter = new ArrayAdapter(this, Android.Resource.Layout.SimpleListItemSingleChoice, list3);
-            */
-
-            //List<KeyValuePair<String, Double>> list4 = new List<KeyValuePair<string, double>>();
+            //Fill Listview with data!
 			list4 = new List<KeyValuePair<string, double>>();
             foreach (KeyValuePair<String, Double> kv in ConApp.client.Users)
             {
@@ -73,12 +57,15 @@ namespace ConvenienceApp
 
             listview.BringToFront();
 
+            //Set the Listener - it's me!
             listview.OnItemClickListener = this;
 
             
         }
 
-
+        /// <summary>
+        /// Listener for havin selected a user.
+        /// </summary>
         public void OnItemClick(AdapterView parent, View view, int position, long id)
         {
 			//ConApp.User = list3.ElementAt (position);
