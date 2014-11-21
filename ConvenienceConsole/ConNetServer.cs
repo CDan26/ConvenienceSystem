@@ -186,8 +186,9 @@ namespace ConvenienceBackend
             Console.WriteLine("End kv-list");
             try
             {
-                dict.TryGetValue(p, out mail);
+                Boolean a = dict.TryGetValue(p, out mail);
                 //mail = this.cs.GetMailsDict()[p];
+                if (!a) return;
             }
             catch (Exception e)
             {
@@ -195,6 +196,7 @@ namespace ConvenienceBackend
                 Console.WriteLine("BuyMail-Fail: " + e.Message);
                 return;
             }
+
 
             String msg = "Hallo " + p + ", " + System.Environment.NewLine + System.Environment.NewLine;
             msg += "Du hast gerade Prdukte gekauft: " + System.Environment.NewLine;

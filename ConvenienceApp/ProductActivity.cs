@@ -138,7 +138,7 @@ namespace ConvenienceApp
 				{
 					//s += prod + System.Environment.NewLine;
 					s += prod + ", " ;
-                    price += ConApp.client.Products[s];
+                    price += ConApp.client.Products[prod];
 				}
 			}
 			tv.Text = s;
