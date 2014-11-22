@@ -1,39 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:p1="http://schemas.android.com/apk/res/android"
-    p1:minWidth="25px"
-    p1:minHeight="25px"
-    p1:layout_width="match_parent"
-    p1:layout_height="match_parent"
-    p1:id="@+id/relativeLayout1">
-    <ListView
-        p1:minWidth="25px"
-        p1:minHeight="25px"
-        p1:layout_width="500dp"
-        p1:layout_height="match_parent"
-        p1:id="@+id/listView1"
-        p1:background="@android:color/darker_gray" />
-    <TextView
-        p1:text="@string/ConnectedDescription"
-        p1:layout_width="wrap_content"
-        p1:layout_height="wrap_content"
-        p1:layout_toRightOf="@id/listView1"
-        p1:id="@+id/textView1"
-        p1:layout_centerVertical="true"
-        p1:layout_alignParentRight="true"
-        p1:layout_marginTop="50dp"
-        p1:paddingLeft="200dp"
-        p1:textSize="30dp"
-        p1:paddingBottom="80dp" />
-    <TextView
-        p1:text="@string/Vorschlag"
-        p1:layout_width="wrap_content"
-        p1:layout_height="wrap_content"
-        p1:layout_below="@id/textView1"
-        p1:id="@+id/textView2"
-        p1:layout_toRightOf="@id/listView1"
-        p1:layout_centerHorizontal="false"
-        p1:layout_alignParentRight="true"
-        p1:paddingLeft="100dp"
-        p1:paddingTop="10dp"
-        p1:textSize="30dp" />
-</RelativeLayout>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:minWidth="25px"
+    android:minHeight="25px">
+    <LinearLayout
+        android:orientation="horizontal"
+        android:minWidth="25px"
+        android:minHeight="25px"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/linearLayout1">
+        <LinearLayout
+            android:orientation="vertical"
+            android:minWidth="25px"
+            android:minHeight="25px"
+            android:layout_width="0dp"
+            android:layout_weight="0.50"
+            android:layout_height="match_parent"
+            android:id="@+id/linearLayout2">
+            <ListView
+                android:minWidth="25px"
+                android:minHeight="25px"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/listView1"
+                android:background="@android:color/darker_gray"
+                android:scrollbars="vertical" />
+        </LinearLayout>
+        <LinearLayout
+            android:orientation="vertical"
+            android:minWidth="25px"
+            android:minHeight="25px"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.50"
+            android:id="@+id/linearLayout3">
+            <TextView
+                android:text="@string/ConnectedDescription"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@id/listView1"
+                android:id="@+id/textView1"
+                android:layout_centerVertical="true"
+                android:layout_alignParentRight="true"
+                android:layout_marginTop="50dp"
+                android:paddingLeft="50dp"
+                android:textSize="30dp"
+                android:paddingBottom="80dp" />
+            <TextView
+                android:text="@string/Vorschlag"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/textView1"
+                android:id="@+id/textView2"
+                android:layout_toRightOf="@id/listView1"
+                android:layout_centerHorizontal="false"
+                android:layout_alignParentRight="true"
+                android:paddingLeft="50dp"
+                android:paddingTop="10dp"
+                android:textSize="30dp"
+                android:scrollbars="vertical"
+                android:overScrollMode="ifContentScrolls" />
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

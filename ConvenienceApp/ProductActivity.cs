@@ -18,7 +18,7 @@ namespace ConvenienceApp
     /// <summary>
     /// The User has been selected and now, the App waits for the products to be bought.
     /// </summary>
-    [Activity(Label = "Produkte auswaehlen")]
+	[Activity(Label = "Produkte auswaehlen")]
     public class ProductActivity : Activity,ListView.IOnItemClickListener
     {
 		/// <summary>
