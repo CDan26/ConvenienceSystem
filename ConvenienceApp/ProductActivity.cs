@@ -124,7 +124,7 @@ namespace ConvenienceApp
 				}
 			}
 			tv.Text = s;
-            BuyButton.Text = "Kaufen (" + price + ")";
+            BuyButton.Text = "Kaufen (" + price.ToString("C") + ")";
 		}
 
 		/// <summary>

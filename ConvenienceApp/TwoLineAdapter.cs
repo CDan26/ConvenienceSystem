@@ -45,7 +45,8 @@ namespace ConvenienceApp
            if (view == null) // no view to re-use, create new
                view = context.LayoutInflater.Inflate(Resource.Layout.TwoLineView, null);
            view.FindViewById<TextView>(Resource.Id.TText1).Text = item.Key;
-           view.FindViewById<TextView>(Resource.Id.TText2).Text = Convert.ToString(item.Value);
+           //view.FindViewById<TextView>(Resource.Id.TText2).Text = Convert.ToString(item.Value);
+           view.FindViewById<TextView>(Resource.Id.TText2).Text = item.Value.ToString("C");
            //view.FindViewById<ImageView>(Resource.Id.Image).SetImageResource(item.ImageResourceId);
            return view;
        }
