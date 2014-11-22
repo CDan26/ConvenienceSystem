@@ -205,7 +205,7 @@ namespace ConvenienceBackend
                 Console.WriteLine("buy: " + s);
                 Double prod;
                 if (this.cs.GetProductsDict().TryGetValue(s, out prod))
-                    msg += s + " fuer " + this.cs.GetProductsDict()[s] + System.Environment.NewLine;
+                    msg += s + " fuer " + (this.cs.GetProductsDict()[s]).ToString("C") + System.Environment.NewLine;
             }
             msg += "Bitte beachte, dass die Daten nur sporadisch aktualisiert werden. Bei Fragen wende dich einfach an: " + Settings.Contactmail + System.Environment.NewLine;
             msg += "Vielen Dank und guten Durst/Appetit, " + System.Environment.NewLine + "Deine Getraenkekasse";
