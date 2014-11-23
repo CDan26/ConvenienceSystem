@@ -210,6 +210,7 @@ namespace ConvenienceBackend
             msg += "Bitte beachte, dass die Daten nur sporadisch aktualisiert werden. Bei Fragen wende dich einfach an: " + Settings.Contactmail + System.Environment.NewLine;
             msg += "Vielen Dank und guten Durst/Appetit, " + System.Environment.NewLine + "Deine Getraenkekasse";
 
+
             this.SendMail(mail, msg);
 
             
@@ -228,8 +229,10 @@ namespace ConvenienceBackend
             //client.Credentials = new System.Net.NetworkCredential(Settings.MailUser, Settings.MailPass);
             client.Credentials = new System.Net.NetworkCredential(Settings.MailUser, Settings.MailPass);
             client.EnableSsl = true;
-            mail.Subject = "Kauf im Getraenkekassen-System";
+            mail.Subject = "Kauf im Getränkekassen-System";
             mail.Body = message;
+            mail.BodyEncoding = System.Text.Encoding.UTF8;
+            mail.SubjectEncoding = System.Text.Encoding.UTF8;
             try
             {
                 Console.WriteLine(client.Credentials.ToString());
