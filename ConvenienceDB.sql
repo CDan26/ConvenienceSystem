@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost:3306
--- Erstellungszeit: 20. Nov 2014 um 23:53
+-- Erstellungszeit: 23. Nov 2014 um 21:33
 -- Server Version: 5.5.40-0+wheezy1
 -- PHP-Version: 5.4.33
 
@@ -31,7 +31,7 @@ CREATE TABLE IF NOT EXISTS `gk_accounting` (
   `comment` text,
   `device` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`ID`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=147 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=281 ;
 
 -- --------------------------------------------------------
 
@@ -44,6 +44,18 @@ CREATE TABLE IF NOT EXISTS `gk_devices` (
   `deviceID` varchar(255) NOT NULL,
   `OS` varchar(255) DEFAULT NULL,
   `comment` varchar(255) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Tabellenstruktur für Tabelle `gk_keydates`
+--
+
+CREATE TABLE IF NOT EXISTS `gk_keydates` (
+  `keydate` datetime NOT NULL,
+  `comment` text NOT NULL,
+  PRIMARY KEY (`keydate`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -88,7 +100,7 @@ CREATE TABLE IF NOT EXISTS `gk_user` (
   `comment` text,
   PRIMARY KEY (`ID`),
   UNIQUE KEY `username` (`username`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=17 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=85 ;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

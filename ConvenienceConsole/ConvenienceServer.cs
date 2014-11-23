@@ -89,13 +89,14 @@ namespace ConvenienceBackend
 
         private void GetUsers()
         {
-            MySqlDataReader reader = this.Query("SELECT * FROM gk_user ORDER BY username ASC LIMIT 0,200");
+            MySqlDataReader reader = this.Query("SELECT * FROM gk_user WHERE gk_user.state='active' ORDER BY username ASC LIMIT 0,200");
+            Users.Clear();
             while (reader.Read())
             {
-                if (Users.ContainsKey(reader.GetString("username")))
+                /*if (Users.ContainsKey(reader.GetString("username")))
                 {
                     Users.Remove(reader.GetString("username"));
-                }
+                }*/
                 Users.Add(reader.GetString("username"),reader.GetDouble("debt"));
             }
 
@@ -129,12 +130,13 @@ namespace ConvenienceBackend
         private void GetProducts()
         {
             MySqlDataReader reader = this.Query("SELECT * FROM gk_pricing ORDER BY product ASC LIMIT 0,200");
+            Products.Clear();
             while (reader.Read())
             {
-                if (Products.ContainsKey(reader.GetString("product")))
+                /*if (Products.ContainsKey(reader.GetString("product")))
                 {
                     Products.Remove(reader.GetString("product"));
-                }
+                }*/
                 Products.Add(reader.GetString("product"),reader.GetDouble("price"));
             }
 
@@ -150,12 +152,13 @@ namespace ConvenienceBackend
         {
             
             MySqlDataReader reader = this.Query("SELECT * FROM gk_mail WHERE active='true'");
+            Mails.Clear();
             while (reader.Read())
             {
-                if (Mails.ContainsKey(reader.GetString("username")))
+                /*if (Mails.ContainsKey(reader.GetString("username")))
                 {
                     Mails.Remove(reader.GetString("username"));
-                }
+                }*/
                 Mails.Add(reader.GetString("username"), reader.GetString("adress"));
             }
 
