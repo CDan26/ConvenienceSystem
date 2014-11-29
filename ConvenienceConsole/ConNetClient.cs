@@ -226,11 +226,25 @@ namespace ConvenienceBackend
 
 			Dictionary<String, Double> dict = new Dictionary<string, double>();
 
-			foreach (KeyValuePair<String, String> s in dictS)
-			{
-				String v = s.Value.Replace('.', ',');
-				dict.Add(s.Key, (Convert.ToDouble(v)));
-			}
+            foreach (KeyValuePair<String, String> s in dictS)
+            {
+                /**
+                 * 
+                 * Known Issue!
+                 * Depending on Localization the Strings need ',' or '.'.
+                 * For now, we only handle Germany (DE, using ',') and (##, using '.')
+                 * 
+                 * 
+                 **/
+                String v = s.Value;
+                if (System.Globalization.RegionInfo.CurrentRegion.TwoLetterISORegionName.Equals("DE"))
+                {
+                    v = s.Value.Replace('.', ',');
+                }
+                //String v = s.Value;
+                dict.Add(s.Key, (Convert.ToDouble(v)));
+                //Console.WriteLine("s2d: ("+v+") "+(Convert.ToDouble(v)).ToString("R"));
+            }
 
 			return dict;
 		}
