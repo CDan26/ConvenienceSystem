@@ -33,12 +33,16 @@ namespace ConvenienceBackend
 
         public Boolean Connect()
         {
+				DateTime dt = DateTime.Now;				
+				String datum = String.Format("{0:yyyy-MM-dd HH:mm:ss}", dt);
                 //Server-Mode
-                Console.WriteLine("Starting Server");
+                //Console.WriteLine("[]Starting Server");
+                Logger.Log("ConNetServer.Connect", "Starting Server");
                 //IPAddress ipAddress = Dns.GetHostEntry("localhost").AddressList[0];
                 //TcpListener listener = new TcpListener(ipAddress,4012);
 				listener = new TcpListener(IPAddress.Any, Settings.Port);
-                Console.WriteLine("Starting Listener");
+                Logger.Log("ConNetServer.Connect", "Starting Listener");
+                //Console.WriteLine("Starting Listener");
 
                 listener.Start();
 
@@ -49,18 +53,18 @@ namespace ConvenienceBackend
                     try
                     {
                         //Server event loop
-                        Console.WriteLine("Socket init");
+                        Logger.Log("ConNetServer.Connect", "Socket init");
                         soc = listener.AcceptSocket();
 
                         FailFlag = false;
 
-                        Console.WriteLine("Accepted Connection");
+                        Logger.Log("ConNetServer.Connect", "Accepted Connection");
                         ns = new NetworkStream(soc);
                         sr = new StreamReader(ns);
                         sw = new StreamWriter(ns);
                         sw.AutoFlush = true;
 
-                        Console.WriteLine("starting ReadLoop");
+                        Logger.Log("ConNetServer.Connect", "starting ReadLoop");
 
                         sw.WriteLine("starting SW");
 
@@ -68,10 +72,10 @@ namespace ConvenienceBackend
                         while (soc.Connected)
                         {
                             string text = sr.ReadLine();
-                            Console.WriteLine("Receive: " + text);
+                            Logger.Log("ConNetServer.Connect", "Receive: " + text);
                             String answer;
                             this.ServerHandle(text, out answer);
-                            Console.WriteLine("answer: " + answer);
+                            Logger.Log("ConNetServer.Connect", "answer: " + answer);
                             sw.WriteLine(answer);
                             if (text == "quit") break;
                         }
@@ -79,11 +83,11 @@ namespace ConvenienceBackend
                     }
                     catch (Exception e)
                     {
-                        Console.WriteLine("Connect-Fail: " + e.Message);
+                        Logger.Log("ConNetServer.Connect", "Connect-Exception: " + e.Message);
                         
                         if (FailFlag)
                         {
-                            Console.WriteLine("Fail with flag -> shut down");
+                            Logger.Log("ConNetServer.Connect", "Fail with flag -> shut down");
                             soc.Close();
                             break;
                         }
@@ -102,7 +106,7 @@ namespace ConvenienceBackend
         public bool ServerHandle(String handle, out String answer)
         {
             //msg parts have to be seperated by "|" (now: Settings.MsgSeperator)
-            Console.WriteLine("Serverhandle: " + handle);
+            Logger.Log("ConNetServer.ServerHandle", "Serverhandle: " + handle);
 
             int index;
             //index = handle.LastIndexOf(Settings.MsgSeperator);
@@ -114,13 +118,13 @@ namespace ConvenienceBackend
                 return false;
             }
 
-            Console.WriteLine("Serverhandles valid");
+            //Console.WriteLine("Serverhandles valid");
             
             String p1 = handle.Substring(0,index);
             String p2 = handle.Substring(index+1);
             //TODO: switch/case for handles
-            Console.WriteLine("p1: " + p1);
-			Console.WriteLine ("p2: " + p2);
+            //Console.WriteLine("p1: " + p1);
+			//Console.WriteLine ("p2: " + p2);
             switch (p1)
             {
                 case "register":
@@ -146,26 +150,26 @@ namespace ConvenienceBackend
                     return true;
 
 				case "buy":
-					Console.WriteLine ("Buying stuff");
+					//Console.WriteLine ("Buying stuff");
 					String[] words = p2.Split (new Char[] { Settings.MsgSeperator });
 					List<String> list = new List<string> ();
 					for (int i = 2; i < words.Length; i++)
 					{
 						list.Add (words [i]);
 					}
-					Console.WriteLine ("list: " + list.ToString ());
+					//Console.WriteLine ("list: " + list.ToString ());
 		            Boolean a = this.cs.Buy(words[1], list);
                     if (a)
                     {
                         //send mail!
-                        Console.WriteLine("Send mail to " + words[1]);
+                        Logger.Log("ConNetServer.Connect", "Send mail to " + words[1]);
                         this.BuyMail(words[1], list);
                     }
 		            answer = "done";
 		            return a;
 
                 default:
-                    Console.Write("Invalid Command: "+handle+" in ("+p1+","+p2+")");
+                    Logger.Log("ConNetServer.ServerHandle", "Invalid Command: "+handle+" in ("+p1+","+p2+")");
                     answer = Settings.MsgInvalid;
                     return false;
                     
@@ -177,13 +181,13 @@ namespace ConvenienceBackend
         {
             //get mail for user
             String mail;
-            Console.WriteLine("DebugMail ("+p+")");
+            //Console.WriteLine("DebugMail ("+p+")");
             Dictionary<String, String> dict = this.cs.GetMailsDict();
-            foreach (KeyValuePair<String, String> kv in dict)
+            /*foreach (KeyValuePair<String, String> kv in dict)
             {
                 Console.WriteLine(kv.Key + " : " + kv.Value);
             }
-            Console.WriteLine("End kv-list");
+            Console.WriteLine("End kv-list");*/
             try
             {
                 Boolean a = dict.TryGetValue(p, out mail);
@@ -193,7 +197,7 @@ namespace ConvenienceBackend
             catch (Exception e)
             {
                 //no mail adress known for this person -> return
-                Console.WriteLine("BuyMail-Fail: " + e.Message);
+                Logger.Log("ConNetServer.BuyMail", "BuyMail-Fail: " + e.Message);
                 return;
             }
 
@@ -202,7 +206,7 @@ namespace ConvenienceBackend
             msg += "Du hast gerade Prdukte gekauft: " + System.Environment.NewLine;
             foreach (String s in list)
             {
-                Console.WriteLine("buy: " + s);
+                //Console.WriteLine("buy: " + s);
                 Double prod;
                 if (this.cs.GetProductsDict().TryGetValue(s, out prod))
                     msg += s + " fuer " + (this.cs.GetProductsDict()[s]).ToString("C") + System.Environment.NewLine;
@@ -218,7 +222,7 @@ namespace ConvenienceBackend
 
         public Boolean SendMail(String to, String message)
         {
-            Console.WriteLine("Now, Sending Mail!");
+            //Console.WriteLine("Now, Sending Mail!");
             ServicePointManager.ServerCertificateValidationCallback = (sender, certificate, chain, sslPolicyErrors) => true;
             MailMessage mail = new MailMessage(Settings.MailFrom, to);
             SmtpClient client = new SmtpClient();
@@ -235,12 +239,12 @@ namespace ConvenienceBackend
             mail.SubjectEncoding = System.Text.Encoding.UTF8;
             try
             {
-                Console.WriteLine(client.Credentials.ToString());
+                //Console.WriteLine(client.Credentials.ToString());
                 client.Send(mail);
             }
             catch (Exception e)
             {
-                Console.WriteLine("Mail-Fail: " + e.Message);
+                Logger.Log("ConNetServer.SendMail", "Mail-Fail: " + e.Message);
             }
 
             return true;
@@ -249,11 +253,11 @@ namespace ConvenienceBackend
         public static String Dict2String(Dictionary<String,Double> dict)
         {
             String text = "";
-            Console.WriteLine("Dict-size: " + dict.Count());
+            //Console.WriteLine("Dict-size: " + dict.Count());
             
             foreach (KeyValuePair<String, Double> s in dict)
             {
-                Console.WriteLine("[GetProducts] Product: " + s.Key + " with price: " + s.Value);
+                //Console.WriteLine("[GetProducts] Product: " + s.Key + " with price: " + s.Value);
                 text = text + s.Key + "=" + s.Value + Settings.MsgSeperator;
             }
 
@@ -262,7 +266,7 @@ namespace ConvenienceBackend
 
         public static Dictionary<String, Double> String2Dict(String text)
         {
-            Console.WriteLine("test000: " + text);
+            //Console.WriteLine("test000: " + text);
             
             Dictionary<String, String> dictS = new Dictionary<String, String>();
 

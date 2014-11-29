@@ -19,13 +19,13 @@ namespace ConvenienceServer
 
         public static void Main(string[] args)
         {
-            Console.WriteLine("Starting Server");
+            //Console.WriteLine("Starting Server");
             ConNetServer c = new ConNetServer();
             c.Connect();
             
 
-            Console.WriteLine("exit");
-            Console.ReadLine();
+            //Console.WriteLine("exit");
+            //Console.ReadLine();
              
             Console.ReadLine();
         }

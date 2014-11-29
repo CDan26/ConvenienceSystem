@@ -172,45 +172,48 @@ namespace ConvenienceBackend
 
 		public Boolean Buy(String username, List<String> products)
 		{
-			Console.WriteLine ("CS, u:" + username + ", p:" + products);
+			//Console.WriteLine ("CS, u:" + username + ", p:" + products);
 			DateTime dt = DateTime.Now;
 			//String datum = String.Format ("yyyy'-'MM'-'dd HH':'mm':'ss'", dt);
 			String datum = String.Format("{0:yyyy-MM-dd HH:mm:ss}", dt);
 
+
 			Double fullPrice = 0;
+			String plist = "";
 
 			foreach (String s in products) 
 			{
 				Double p;
                 Boolean b = this.Products.TryGetValue(s, out p);
 				fullPrice = fullPrice + p;
+				plist = plist + s + ", ";
 				String pString = p.ToString ().Replace (',', '.');
 				if (!b) break;
                 String cmd = "INSERT INTO `gk_accounting` (`ID`, `date`, `user`, `price`, `comment`) VALUES (NULL, '"+datum+"', '"+username+"', '"+pString+"', '"+s+"');";
-				Console.WriteLine ("CMD: " + cmd);
+				//Console.WriteLine ("CMD: " + cmd);
 				MySqlDataReader reader = this.Query (cmd);
 				if (reader.Read())
 				{
                     String answer = reader.GetString(0);
-                    Console.WriteLine(answer);
+                    //Console.WriteLine(answer);
 				}
 			}
+
+			Console.WriteLine ("["+datum+"] "+ username + " bought " + plist);
+
 			//Update user's debt
 			Double nDebt;
 			Users.TryGetValue (username, out nDebt);
 			nDebt = nDebt + fullPrice;
 			String newDebt = nDebt.ToString().Replace(',','.');
 			String cmd2 = "UPDATE `gk_user` SET `debt` = '"+newDebt+"' WHERE `gk_user`.`username` = '"+username+"';";
-			Console.WriteLine (cmd2);
+			//Console.WriteLine (cmd2);
 			MySqlDataReader reader2 = this.Query (cmd2);
 			if (reader2.Read())
 			{
 				String answer = reader2.GetString(0);
-				Console.WriteLine(answer);
+				//Console.WriteLine(answer);
 			}
-
-
-			//TODO: Mailversand
 
 			return true;
 		}
