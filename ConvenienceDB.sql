@@ -1,12 +1,3 @@
--- phpMyAdmin SQL Dump
--- version 4.1.12
--- http://www.phpmyadmin.net
---
--- Host: localhost:3306
--- Erstellungszeit: 23. Nov 2014 um 21:33
--- Server Version: 5.5.40-0+wheezy1
--- PHP-Version: 5.4.33
-
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
 
@@ -16,9 +7,6 @@ SET time_zone = "+00:00";
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
 /*!40101 SET NAMES utf8 */;
 
-
--- --------------------------------------------------------
-
 --
 -- Tabellenstruktur für Tabelle `gk_accounting`
 --
@@ -27,11 +15,11 @@ CREATE TABLE IF NOT EXISTS `gk_accounting` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,
   `date` datetime NOT NULL COMMENT 'time of accounting',
   `user` varchar(255) NOT NULL COMMENT 'username',
-  `price` double NOT NULL,
+  `price` decimal(60,2) NOT NULL,
   `comment` text,
   `device` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`ID`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=281 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=300 ;
 
 -- --------------------------------------------------------
 
@@ -80,7 +68,7 @@ CREATE TABLE IF NOT EXISTS `gk_mail` (
 CREATE TABLE IF NOT EXISTS `gk_pricing` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,
   `product` varchar(255) NOT NULL COMMENT 'product name',
-  `price` double NOT NULL COMMENT 'product price',
+  `price` decimal(60,2) NOT NULL COMMENT 'product price',
   `comment` text,
   PRIMARY KEY (`ID`),
   UNIQUE KEY `product` (`product`)
@@ -95,7 +83,7 @@ CREATE TABLE IF NOT EXISTS `gk_pricing` (
 CREATE TABLE IF NOT EXISTS `gk_user` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,
   `username` varchar(255) NOT NULL COMMENT 'name of the user',
-  `debt` double NOT NULL COMMENT 'debt the user has',
+  `debt` decimal(60,2) NOT NULL COMMENT 'debt the user has',
   `state` varchar(255) DEFAULT NULL COMMENT 'state of the user - maybe sth. like inactive, blacked, etc.)',
   `comment` text,
   PRIMARY KEY (`ID`),

@@ -11,17 +11,16 @@ using ConvenienceBackend;
 namespace ConvenienceServer
 {
     class Program
-    {
-        //String IP = "178.254.35.215";
-        //int Port = 4012;
-
-        
+    {        
 
         public static void Main(string[] args)
         {
             //Console.WriteLine("Starting Server");
             ConNetServer c = new ConNetServer();
             c.Connect();
+
+            /*ConvenienceBackend.ConvenienceServer cs = new ConvenienceBackend.ConvenienceServer();
+            cs.Test();*/
             
 
             //Console.WriteLine("exit");

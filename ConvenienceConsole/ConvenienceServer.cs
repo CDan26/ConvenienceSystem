@@ -16,6 +16,7 @@ namespace ConvenienceBackend
         public Dictionary<String,Double> Users;
         public Dictionary<String, Double> Products;
         public Dictionary<String, String> Mails;
+        //public Dictionary<String, String> KeyDates;
 
         public ConvenienceServer()
         {
@@ -62,7 +63,21 @@ namespace ConvenienceBackend
             this.GetProducts();
             Console.WriteLine("[Test] starting Query GetMails");
             this.GetMails();
+            Console.WriteLine("[Test] starting Decimal Test");
+            this.DecTest();
             Console.WriteLine("[Test] Test finished");
+        }
+
+        private void DecTest()
+        {
+            this.Connect();
+            MySqlDataReader reader = this.Query("SELECT *,SUM(price) FROM gk_accounting WHERE date >= (SELECT MAX(keydate) FROM gk_keydates) GROUP BY user");
+            while (reader.Read())
+            {
+                Console.WriteLine(reader.GetString("user") + ", " + reader.GetDouble("SUM(price)"));
+            }
+            reader.Close();
+            this.Close();
         }
 
         private MySqlDataReader Query(String stm)
@@ -146,6 +161,19 @@ namespace ConvenienceBackend
                 Console.WriteLine("[GetProducts] Product: " + s.Key + " with price: " + s.Value);
             }*/
             reader.Close();
+        }
+
+        public Dictionary<String,String> GetKeyDatesDict()
+        {
+            MySqlDataReader reader = this.Query("SELECT * FROM gk_keydates ORDER BY keydate DESC LIMIT 0,200");
+            Dictionary<String, String> dict = new Dictionary<string, string>();
+            while (reader.Read())
+            {
+                dict.Add(reader.GetString("keydate"), reader.GetString("comment"));
+            }
+
+            reader.Close();
+            return dict;
         }
 
         private void GetMails()
