@@ -11,8 +11,6 @@ The sub-projects:
 * ConvenienceFormClient: A Client based on WinForms
 * ConvenienceServer: The server part of the system
 
-Known Issues:
-* On Mono 3.10. on OS X 10.10 the Winforms will not work du to a bug in Mono
 
 Further requirements:
 * MySQL Database (struct can be found in ConvenienceDB.sql)
