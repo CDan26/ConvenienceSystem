@@ -124,6 +124,85 @@ namespace ConvenienceBackend
             //return users;
         }
 
+        /// <summary>
+        /// Gets the Sum of products bought in the system since the last Keydate
+        /// </summary>
+        /// <returns>A Dictionary of username (key) and the sum of debt (value)</returns>
+        private Dictionary<String,Double> GetDebtSinceKeyDate()
+        {
+            MySqlDataReader reader = this.Query("SELECT *,SUM(price) FROM gk_accounting WHERE gk_accounting.date>=(SELECT MAX(keydate) FROM gk_keydates) GROUP BY user LIMIT 0,200");
+
+            Dictionary<String, Double> Debts = new Dictionary<string, double>();
+            
+            while (reader.Read())
+            {
+                Debts.Add(reader.GetString("user"), reader.GetDouble("SUM(price)"));
+            }
+            reader.Close();
+            return Debts;
+        }
+
+        /// <summary>
+        /// Gets the Sum of products bought in the system since the provided Keydate (form: yyyy-mm-dd)
+        /// </summary>
+        /// <returns>A Dictionary of username (key) and the sum of debt (value)</returns>
+        private Dictionary<String, Double> GetDebtSinceKeyDate(String keydate)
+        {
+            MySqlDataReader reader = this.Query("SELECT *,SUM(price) FROM gk_accounting WHERE gk_accounting.date>=\""+keydate+"\" GROUP BY user LIMIT 0,200");
+
+            Dictionary<String, Double> Debts = new Dictionary<string, double>();
+
+            while (reader.Read())
+            {
+                Debts.Add(reader.GetString("user"), reader.GetDouble("SUM(price)"));
+            }
+            reader.Close();
+            return Debts;
+        }
+
+        /// <summary>
+        /// Returns the what product was bought how often by the user.
+        /// Beware! uses the "comment" column of the DB - on-product-comments are possible!
+        /// </summary>
+        /// <param name="user">The user</param>
+        private Dictionary<String,Int32> GetProductsCountForUser(String user)
+        {
+            Dictionary<String, Int32> prod = new Dictionary<string, Int32>();
+
+            MySqlDataReader reader = this.Query("SELECT *,COUNT(date) FROM `gk_accounting` WHERE user='Arno Schmetz' GROUP BY `comment` DESC LIMIT 0,200");
+
+            while (reader.Read())
+            {
+                prod.Add(reader.GetString("comment"), reader.GetInt32("COUNT(date)"));
+            }
+            reader.Close();
+            return prod;
+        }
+
+        /// <summary>
+        /// inserts a new keydate (form yyyy-MM-dd HH:mm:ss) into the database
+        /// </summary>
+        /// <param name="keydate">the keydate</param>
+        /// <param name="comment">the comment that shuld be added for this keydate</param>
+        private void InsertKeyDate(String keydate="", String comment="Added via Application without comment")
+        {
+            //No keydate provided? use current datetime!
+            if (keydate=="")
+            {
+                DateTime dt = DateTime.Now;
+                //String datum = String.Format ("yyyy'-'MM'-'dd HH':'mm':'ss'", dt);
+                keydate = String.Format("{0:yyyy-MM-dd HH:mm:ss}", dt);
+            }
+            String cmd = "INSERT INTO gk_keydates (`keydate`, `comment`) VALUES ('"+keydate+"', '" + comment + "');";
+
+            MySqlDataReader reader = this.Query(cmd);
+            if (reader.Read())
+            {
+                String answer = reader.GetString(0);
+                //Console.WriteLine(answer);
+            }
+        }
+
         public Dictionary<String, Double> GetUserDict()
         {
             if (this.Users == null) return null;
