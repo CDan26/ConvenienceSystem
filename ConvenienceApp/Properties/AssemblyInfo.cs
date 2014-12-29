@@ -9,7 +9,7 @@ using Android.App;
 [assembly: AssemblyTitle("ConvenienceApp")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("Arno Schmetz")]
 [assembly: AssemblyProduct("ConvenienceApp")]
 [assembly: AssemblyCopyright("Copyright ©  2014")]
 [assembly: AssemblyTrademark("")]

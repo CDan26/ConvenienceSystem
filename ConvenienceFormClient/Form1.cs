@@ -25,55 +25,55 @@ namespace ConvenienceFormClient
             switch (state)
             {
                 case State.START:
-                    this.button_close.Enabled = false;
-                    this.button_connect.Enabled = true;
-                    this.button_prices.Enabled = false;
-                    this.button_update.Enabled = false;
-                    this.button_users.Enabled = false;
+                    this.closeConnectionToolStripMenuItem.Enabled = false;
+                    this.updateDataToolStripMenuItem.Enabled = false;
+                    this.connectToolStripMenuItem.Enabled = true;
+                    this.showToolStripMenuItem.Enabled = false;
+                    this.editToolStripMenuItem.Enabled = false;
                     this.dataGridView1.Enabled = false;
 
                     this.textLog.AppendText("Changed to State START" + System.Environment.NewLine);
                     break;
                 
                 case State.CONNECTED:
-                    this.button_close.Enabled = true;
-                    this.button_connect.Enabled = false;
-                    this.button_prices.Enabled = false;
-                    this.button_update.Enabled = true;
-                    this.button_users.Enabled = false;
+                    this.closeConnectionToolStripMenuItem.Enabled = true;
+                    this.connectToolStripMenuItem.Enabled = false;
+                    this.updateDataToolStripMenuItem.Enabled = true;
+                    this.showToolStripMenuItem.Enabled = false;
+                    this.editToolStripMenuItem.Enabled = false;
                     this.dataGridView1.Enabled = false;
 
                     this.textLog.AppendText("Changed to State CONNECTED" + System.Environment.NewLine);
                     break;
 
                 case State.PRICES:
-                    this.button_close.Enabled = true;
-                    this.button_connect.Enabled = false;
-                    this.button_prices.Enabled = true;
-                    this.button_update.Enabled = true;
-                    this.button_users.Enabled = true;
+                    this.closeConnectionToolStripMenuItem.Enabled = true;
+                    this.connectToolStripMenuItem.Enabled = false;
+                    this.updateDataToolStripMenuItem.Enabled = true;
+                    this.showToolStripMenuItem.Enabled = true;
+                    this.editToolStripMenuItem.Enabled = true;
                     this.dataGridView1.Enabled = true;
 
                     this.textLog.AppendText("Changed to State PRICES" + System.Environment.NewLine);
                     break;
 
                 case State.UPDATED:
-                    this.button_close.Enabled = true;
-                    this.button_connect.Enabled = false;
-                    this.button_prices.Enabled = true;
-                    this.button_update.Enabled = true;
-                    this.button_users.Enabled = true;
+                    this.closeConnectionToolStripMenuItem.Enabled = true;
+                    this.connectToolStripMenuItem.Enabled = false;
+                    this.updateDataToolStripMenuItem.Enabled = true;
+                    this.showToolStripMenuItem.Enabled = true;
+                    this.editToolStripMenuItem.Enabled = false;
                     this.dataGridView1.Enabled = false;
 
                     this.textLog.AppendText("Changed to State UPDATED" + System.Environment.NewLine);
                     break;
 
                 case State.USERS:
-                    this.button_close.Enabled = true;
-                    this.button_connect.Enabled = false;
-                    this.button_prices.Enabled = true;
-                    this.button_update.Enabled = true;
-                    this.button_users.Enabled = true;
+                    this.closeConnectionToolStripMenuItem.Enabled = true;
+                    this.connectToolStripMenuItem.Enabled = false;
+                    this.updateDataToolStripMenuItem.Enabled = true;
+                    this.showToolStripMenuItem.Enabled = true;
+                    this.editToolStripMenuItem.Enabled = true;
                     this.dataGridView1.Enabled = true;
 
                     this.textLog.AppendText("Changed to State USERS" + System.Environment.NewLine);
@@ -81,20 +81,21 @@ namespace ConvenienceFormClient
             }
         }
 
-        private void button_connect_Click(object sender, EventArgs e)
+
+
+        private void connectToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            //TODO:Connect
             this.cn.Connect();
             this.ChangeState(State.CONNECTED);
         }
 
-        private void button_update_Click(object sender, EventArgs e)
+        private void closeConnectionToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            this.cn.Update();
-            this.ChangeState(State.UPDATED);
+            this.ChangeState(State.START);
+            this.cn.Close();
         }
 
-        private void button_users_Click(object sender, EventArgs e)
+        private void usersToolStripMenuItem_Click(object sender, EventArgs e)
         {
             this.ChangeState(State.USERS);
             textLog.AppendText("#Users: " + this.cn.Users.Count + System.Environment.NewLine);
@@ -105,9 +106,10 @@ namespace ConvenienceFormClient
             //list.AddRange(cn.cs.Users);
             //dataGridView1.DataSource = list;
             dataGridView1.DataSource = this.cn.Users.ToArray();
+            dataGridView1.EditMode = DataGridViewEditMode.EditOnKeystrokeOrF2;
         }
 
-        private void button_prices_Click(object sender, EventArgs e)
+        private void pricesToolStripMenuItem_Click(object sender, EventArgs e)
         {
             this.ChangeState(State.PRICES);
             textLog.AppendText("#Products: " + this.cn.Products.Count + System.Environment.NewLine);
@@ -120,10 +122,30 @@ namespace ConvenienceFormClient
             dataGridView1.DataSource = this.cn.Products.ToArray();
         }
 
-        private void button_close_Click(object sender, EventArgs e)
+        private void updateDataToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            this.ChangeState(State.START);
-            this.cn.Close();
+            this.cn.Update();
+            this.ChangeState(State.UPDATED);
+        }
+
+        private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            string version = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString();
+            string backVersion = typeof(ConvenienceBackend.ConNetClient).Assembly.GetName().Version.ToString();
+            string message = "This is the Convenience Admin Client."
+                + System.Environment.NewLine
+                + "Version "
+                + version
+                + System.Environment.NewLine
+                + "Using backend Version "
+                + backVersion
+                + System.Environment.NewLine
+                + System.Environment.NewLine
+                + "(Part of the ConvenienceSystem by auxua/Arno Schmetz - Source: "
+                + "https://github.com/auxua/ConvenienceSystem" + " )";
+
+            string caption = "About The Application";
+            MessageBox.Show(text: message, caption: caption);
         }
     }
 }
