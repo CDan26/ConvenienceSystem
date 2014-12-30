@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections;
 using System.Linq;
 using System.Text;
 using MySql.Data.MySqlClient;
@@ -17,12 +18,20 @@ namespace ConvenienceBackend
         public Dictionary<String, Double> Products;
         public Dictionary<String, String> Mails;
         //public Dictionary<String, String> KeyDates;
+        /// <summary>
+        /// List of recent Accounting Activites
+        /// Tuples for (Date, user, price, comment)
+        /// </summary>
+        public List<Tuple<String, String, Double, String>> Accounting;
+        public List<Tuple<String, String>> KeyDates;
 
         public ConvenienceServer()
         {
             Users = new Dictionary<string, double>();
             Products = new Dictionary<string, double>();
             Mails = new Dictionary<string, string>();
+            Accounting = new List<Tuple<string, string, double, string>>();
+            KeyDates = new List<Tuple<string, string>>();
         }
 
         private void Connect()
@@ -41,7 +50,33 @@ namespace ConvenienceBackend
             this.GetUsers();
             this.GetProducts();
             this.GetMails();
+            this.GetAccounting();
+            this.GetKeyDates();
             this.Close();
+        }
+
+
+
+        private void GetAccounting(Boolean all=false)
+        {
+            //Get all or only the last 25 accounting activities
+            MySqlDataReader reader;
+            if (all)
+            {
+                reader = this.Query("SELECT * FROM gk_accounting ORDER BY gk_accounting.date DESC");
+            }
+            else
+            { 
+                reader = this.Query("SELECT * FROM gk_accounting ORDER BY gk_accounting.date DESC LIMIT 0,25");
+            }
+            Accounting.Clear();
+            while (reader.Read())
+            {
+                Accounting.Add(new Tuple<string, string, double, string>(reader.GetString("date"), reader.GetString("user"), reader.GetDouble("price"), reader.GetString("comment")));
+            }
+
+            reader.Close();
+
         }
 
         private void Close()
@@ -205,19 +240,19 @@ namespace ConvenienceBackend
 
         public Dictionary<String, Double> GetUserDict()
         {
-            if (this.Users == null) return null;
+            //if (this.Users == null) return null;
             return this.Users;
         }
 
         public Dictionary<String, Double> GetProductsDict()
         {
-            if (this.Products == null) return null;
+            //if (this.Products == null) return null;
             return this.Products;
         }
 
         public Dictionary<String, String> GetMailsDict()
         {
-            if (this.Mails == null) return null;
+            //if (this.Mails == null) return null;
             return this.Mails;
         }
 
@@ -242,17 +277,22 @@ namespace ConvenienceBackend
             reader.Close();
         }
 
-        public Dictionary<String,String> GetKeyDatesDict()
+        private void GetKeyDates()
         {
             MySqlDataReader reader = this.Query("SELECT * FROM gk_keydates ORDER BY keydate DESC LIMIT 0,200");
-            Dictionary<String, String> dict = new Dictionary<string, string>();
+            
             while (reader.Read())
             {
-                dict.Add(reader.GetString("keydate"), reader.GetString("comment"));
+                KeyDates.Add(new Tuple<string, string>(reader.GetString("keydate"), reader.GetString("comment")));
             }
 
             reader.Close();
-            return dict;
+        }
+
+        public List<Tuple<String,String>> GetKeyDatesList()
+        {
+            //if (this.KeyDates == null) return null;
+            return this.KeyDates;
         }
 
         private void GetMails()
@@ -354,11 +394,6 @@ namespace ConvenienceBackend
             return id;
         }
 
-        public void Test2()
-        {
-            Console.WriteLine("[Test2] Let's see if this still works...");
-            this.GetUsers();
-        }
 
         ~ConvenienceServer()
         {

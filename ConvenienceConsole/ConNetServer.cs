@@ -179,6 +179,7 @@ namespace ConvenienceBackend
 
         private void BuyMail(string p, List<string> list)
         {
+            //TODO: extract Strings for mail and make it generic/english at least...
             //get mail for user
             String mail;
             //Console.WriteLine("DebugMail ("+p+")");
@@ -250,6 +251,7 @@ namespace ConvenienceBackend
             return true;
         }
 
+        [System.Obsolete("use the Serialization class methods instead!")]
         public static String Dict2String(Dictionary<String,Double> dict)
         {
             String text = "";
@@ -264,6 +266,7 @@ namespace ConvenienceBackend
             return text;
         }
 
+        [System.Obsolete("use the Serialization class methods instead!")]
         public static Dictionary<String, Double> String2Dict(String text)
         {
             //Console.WriteLine("test000: " + text);
@@ -285,5 +288,6 @@ namespace ConvenienceBackend
 
             return dict;
         }
+
     }
 }

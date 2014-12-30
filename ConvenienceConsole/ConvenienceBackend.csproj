@@ -66,6 +66,7 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
+    <Compile Include="Serializers.cs" />
     <Compile Include="Settings.cs" />
   </ItemGroup>
   <ItemGroup>
