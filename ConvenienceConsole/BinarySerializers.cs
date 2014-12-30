@@ -8,19 +8,19 @@ using System.IO;
 
 namespace ConvenienceBackend
 {
-    class Serializers
+    class BinarySerializers
     {
 
         //////////////////////////
-        // New Serialization methods
+        // New (Binary) Serialization methods
         //////////////////////////
 
 
         /*** Dictionaries of String/Double ***/
 
-        public static void SerializeDictSD(Dictionary<string, double> dictionary, Stream stream)
+        public static void SerializeDictSD(Dictionary<string, double> dictionary, BinaryWriter writer)
         {
-            BinaryWriter writer = new BinaryWriter(stream);
+            //BinaryWriter writer = new BinaryWriter(stream);
             writer.Write(dictionary.Count);
             foreach (var kvp in dictionary)
             {
@@ -30,9 +30,9 @@ namespace ConvenienceBackend
             writer.Flush();
         }
 
-        public static Dictionary<string, double> DeserializeDictSD(Stream stream)
+        public static Dictionary<string, double> DeserializeDictSD(BinaryReader reader)
         {
-            BinaryReader reader = new BinaryReader(stream);
+            //BinaryReader reader = new BinaryReader(stream);
             int count = reader.ReadInt32();
             var dictionary = new Dictionary<string, double>(count);
             for (int n = 0; n < count; n++)
@@ -46,9 +46,9 @@ namespace ConvenienceBackend
 
         /*** Dictionaries of String/String ***/
 
-        public static void SerializeDictS(Dictionary<string, string> dictionary, Stream stream)
+        public static void SerializeDictS(Dictionary<string, string> dictionary, BinaryWriter writer)
         {
-            BinaryWriter writer = new BinaryWriter(stream);
+            //BinaryWriter writer = new BinaryWriter(stream);
             writer.Write(dictionary.Count);
             foreach (var kvp in dictionary)
             {
@@ -58,9 +58,9 @@ namespace ConvenienceBackend
             writer.Flush();
         }
 
-        public static Dictionary<string, string> DeserializeDictS(Stream stream)
+        public static Dictionary<string, string> DeserializeDictS(BinaryReader reader)
         {
-            BinaryReader reader = new BinaryReader(stream);
+            //BinaryReader reader = new BinaryReader(stream);
             int count = reader.ReadInt32();
             var dictionary = new Dictionary<string, string>(count);
             for (int n = 0; n < count; n++)
@@ -74,9 +74,9 @@ namespace ConvenienceBackend
 
         /*** Lists of Tuples of String/String ***/
 
-        public static void SerializeListS(List<Tuple<string, string>> dictionary, Stream stream)
+        public static void SerializeListS(List<Tuple<string, string>> dictionary, BinaryWriter writer)
         {
-            BinaryWriter writer = new BinaryWriter(stream);
+            //BinaryWriter writer = new BinaryWriter(stream);
             writer.Write(dictionary.Count);
             foreach (var kvp in dictionary)
             {
@@ -86,9 +86,9 @@ namespace ConvenienceBackend
             writer.Flush();
         }
 
-        public static List<Tuple<string, string>> DeserializeListtS(Stream stream)
+        public static List<Tuple<string, string>> DeserializeListtS(BinaryReader reader)
         {
-            BinaryReader reader = new BinaryReader(stream);
+            //BinaryReader reader = new BinaryReader(stream);
             int count = reader.ReadInt32();
             var dictionary = new List<Tuple<string, string>>(count);
             for (int n = 0; n < count; n++)
@@ -102,9 +102,9 @@ namespace ConvenienceBackend
 
         /*** Lists of Tuples of String/String/Double/String ***/
 
-        public static void SerializeListSSDS(List<Tuple<string, string, double, string>> dictionary, Stream stream)
+        public static void SerializeListSSDS(List<Tuple<string, string, double, string>> dictionary, BinaryWriter writer)
         {
-            BinaryWriter writer = new BinaryWriter(stream);
+            //BinaryWriter writer = new BinaryWriter(stream);
             writer.Write(dictionary.Count);
             foreach (var kvp in dictionary)
             {
@@ -116,9 +116,9 @@ namespace ConvenienceBackend
             writer.Flush();
         }
 
-        public static List<Tuple<string, string, double, string>> DeserializeListtSSDS(Stream stream)
+        public static List<Tuple<string, string, double, string>> DeserializeListtSSDS(BinaryReader reader)
         {
-            BinaryReader reader = new BinaryReader(stream);
+            //BinaryReader reader = new BinaryReader(stream);
             int count = reader.ReadInt32();
             var dictionary = new List<Tuple<string, string, double, string>>(count);
             for (int n = 0; n < count; n++)

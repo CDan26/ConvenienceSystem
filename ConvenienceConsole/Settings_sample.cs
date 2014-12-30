@@ -12,6 +12,7 @@ namespace ConvenienceBackend
         public static readonly int Port = 0;
         public static readonly char MsgSeperator = ' ';
         public static readonly string MsgInvalid = "_MsGInvalid_";
+        public static readonly string MsgACK = "_MsGACK";
 
         public static readonly String DBName = "";
         public static readonly String DBUser = "";

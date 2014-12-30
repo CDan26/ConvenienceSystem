@@ -1,4 +1,5 @@
-﻿using System;
+﻿#define BINARY
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -24,9 +25,22 @@ namespace ConvenienceBackend
         private TcpListener listener;
         private Socket soc;
         private NetworkStream ns;
+#if (!BINARY)
         private StreamReader sr;
         private StreamWriter sw;
+#else
+        private BinaryReader sr;
+        private BinaryWriter sw;
+#endif
 
+        public static Boolean isBinaryBackend()
+        {
+#if BINARY
+            return true;
+#else
+            return false;
+#endif
+        }
 
         public Dictionary<String, Double> Users;
         public Dictionary<String, Double> Products;
@@ -41,7 +55,7 @@ namespace ConvenienceBackend
                 //IPAddress ipAddress = Dns.GetHostEntry("localhost").AddressList[0];
                 //TcpListener listener = new TcpListener(ipAddress,4012);
 				listener = new TcpListener(IPAddress.Any, Settings.Port);
-                Logger.Log("ConNetServer.Connect", "Starting Listener");
+                Logger.Log("ConNetServer.Connect", "Starting Listener on Port"+Settings.Port);
                 //Console.WriteLine("Starting Listener");
 
                 listener.Start();
@@ -60,17 +74,28 @@ namespace ConvenienceBackend
 
                         Logger.Log("ConNetServer.Connect", "Accepted Connection");
                         ns = new NetworkStream(soc);
+#if (!BINARY)
                         sr = new StreamReader(ns);
                         sw = new StreamWriter(ns);
                         sw.AutoFlush = true;
+#else
+                        sr = new BinaryReader(ns);
+                        sw = new BinaryWriter(ns);
+#endif
+                        
 
                         Logger.Log("ConNetServer.Connect", "starting ReadLoop");
-
+#if (!BINARY)
                         sw.WriteLine("starting SW");
+#else
+                        sw.Write("starting SW");
+                        sw.Flush();
+#endif
 
 
                         while (soc.Connected)
                         {
+#if (!BINARY)
                             string text = sr.ReadLine();
                             Logger.Log("ConNetServer.Connect", "Receive: " + text);
                             String answer;
@@ -78,6 +103,18 @@ namespace ConvenienceBackend
                             Logger.Log("ConNetServer.Connect", "answer: " + answer);
                             sw.WriteLine(answer);
                             if (text == "quit") break;
+#else
+                            //format of binary commands:
+                            //CMD(string)clientID(string)[arguments]
+                            //No msg seperator needed!
+                            Logger.Log("waiting");
+                            string command = sr.ReadString();
+                            Logger.Log("ConNetServer.Connect", "Received binary command: " + command);
+                            if (command == "quit") break;
+                            Boolean state = this.ServerHandleBinary(command);
+
+#endif
+
                         }
 
                     }
@@ -100,9 +137,82 @@ namespace ConvenienceBackend
             
         }
 
+#if (BINARY)
+        private bool ServerHandleBinary(string command)
+        {
+            //msg parts have to be seperated by "|" (now: Settings.MsgSeperator)
+            Logger.Log("ConNetServer.ServerHandle", "ServerhandleBinary: " + command);
+
+            //Get the client identifier
+            String client = sr.ReadString();
+            //TODO: check for authorization of this client
+            
+            switch (command)
+            {
+                case "register":
+                    //TODO: Use in DB smewhere....
+                    //answer = this.cs.Register(p2);
+                    //answer = "";
+                    return true;
+                case "update":
+                    cs.Update();
+                    sw.Write(Settings.MsgACK);
+                    sw.Flush();
+                    return true;
+                case "prices":
+                    //get prices
+                    BinarySerializers.SerializeDictSD(cs.GetProductsDict(), sw);
+                    return true;
+                //break;
+                case "users":
+                    //get users
+                    BinarySerializers.SerializeDictSD(cs.GetUserDict(), sw);
+                    return true;
+
+                case "buy":
+                    List<String> list = new List<String>();
+                    String user = sr.ReadString();
+                    try
+                    {
+                        while (true)
+                        {
+                            String s = sr.ReadString();
+                            if (s == Settings.MsgACK)
+                                break;
+                            list.Add(s);
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        Logger.Log("ConNetServer.ServerhandleBinary.Buy","Exception found: " + e.Message);
+                    }
+                    
+                    Boolean a = this.cs.Buy(user, list);
+                    //TODO: make mailing async (needs most of the time)
+                    if (a)
+                    {
+                        //send mail!
+                        Logger.Log("ConNetServer.Connect", "Send mail to " + user);
+                        this.BuyMail(user, list);
+                    }
+                    //answer = "done";
+                    sw.Write(Settings.MsgACK);
+                    return true;
+
+                default:
+                    Logger.Log("ConNetServer.ServerHandle", "Invalid Command: " + command);
+                    sw.Write(Settings.MsgInvalid);
+                    return false;
+
+            }
+        }
+#endif
         
 
-        // Allows handling of an Request. Returns true, if data is available/no error occured
+        /// <summary>
+        /// Allows handling of an Request. Returns true, if data is available/no error occured
+        /// Works only for the non-binary (legacy) version
+        /// </summary>
         public bool ServerHandle(String handle, out String answer)
         {
             //msg parts have to be seperated by "|" (now: Settings.MsgSeperator)

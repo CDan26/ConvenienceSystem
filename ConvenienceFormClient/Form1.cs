@@ -86,6 +86,7 @@ namespace ConvenienceFormClient
         private void connectToolStripMenuItem_Click(object sender, EventArgs e)
         {
             this.cn.Connect();
+            //TODO: no connection? -> abort
             this.ChangeState(State.CONNECTED);
         }
 
@@ -130,8 +131,14 @@ namespace ConvenienceFormClient
 
         private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            bool bin = ConvenienceBackend.ConNetClient.isBinaryBackend();
+            
             string version = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString();
             string backVersion = typeof(ConvenienceBackend.ConNetClient).Assembly.GetName().Version.ToString();
+            if (bin)
+                backVersion = backVersion + " (Binary Version)";
+            else
+                backVersion = backVersion + " (Plain Version)";
             string message = "This is the Convenience Admin Client."
                 + System.Environment.NewLine
                 + "Version "
