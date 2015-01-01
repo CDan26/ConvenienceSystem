@@ -52,13 +52,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BinarySerializers.cs" />
     <Compile Include="ConnectedActivity.cs" />
     <Compile Include="ConNetClient.cs" />
     <Compile Include="ConvenienceClient.cs" />
     <Compile Include="MainActivity.cs" />
     <Compile Include="Resources\Resource.Designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Settings.cs" />
+    <Compile Include="Settings.cs">
+      <SubType>
+      </SubType>
+    </Compile>
     <Compile Include="ConApp.cs" />
     <Compile Include="ProductActivity.cs" />
     <Compile Include="TwoLineAdapter.cs" />

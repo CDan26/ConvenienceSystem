@@ -18,7 +18,7 @@ namespace ConvenienceApp
     /// <summary>
     /// The User has been selected and now, the App waits for the products to be bought.
     /// </summary>
-	[Activity(Label = "Produkte auswaehlen")]
+	[Activity(Label = "Choose Products")]
     public class ProductActivity : Activity,ListView.IOnItemClickListener
     {
 		/// <summary>
@@ -96,6 +96,10 @@ namespace ConvenienceApp
 					this.alert("Fehler - bitte erneut versuchen (Oder Strichliste nutzen)");
 				}
 			};
+
+            //change the activity title
+            String user = ConApp.User;
+            this.Title = "Hallo "+user+", bitte Produkte wählen";
 
         }
 
