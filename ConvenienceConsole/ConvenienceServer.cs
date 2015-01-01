@@ -346,7 +346,8 @@ namespace ConvenienceBackend
 				}
 			}
 
-			Console.WriteLine ("["+datum+"] "+ username + " bought " + plist);
+			//Console.WriteLine ("["+datum+"] "+ username + " bought " + plist);
+            Logger.Log("ConvenienceServer.Buy", username + " bought " + plist);
 
 			//Update user's debt
 			Double nDebt;

@@ -7,6 +7,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.IO;
 using System.Net.Mail;
+using System.Threading;
 
 namespace ConvenienceBackend
 {
@@ -107,7 +108,7 @@ namespace ConvenienceBackend
                             //format of binary commands:
                             //CMD(string)clientID(string)[arguments]
                             //No msg seperator needed!
-                            Logger.Log("waiting");
+                            Logger.Log("ConNetServer.Connect","waiting for commands");
                             string command = sr.ReadString();
                             Logger.Log("ConNetServer.Connect", "Received binary command: " + command);
                             if (command == "quit") break;
@@ -188,12 +189,10 @@ namespace ConvenienceBackend
                     }
                     
                     Boolean a = this.cs.Buy(user, list);
-                    //TODO: make mailing async (needs most of the time)
                     if (a)
                     {
                         //send mail!
-                        Logger.Log("ConNetServer.Connect", "Send mail to " + user);
-                        this.BuyMail(user, list);
+                        this.BuyMailThread(user, list);
                     }
                     //answer = "done";
                     sw.Write(Settings.MsgACK);
@@ -207,7 +206,15 @@ namespace ConvenienceBackend
             }
         }
 #endif
-        
+        /// <summary>
+        /// Just a wrapper for executing the sending mail method as thread
+        /// </summary>
+        private void BuyMailThread(string user,List<String> list)
+        {
+            Logger.Log("ConNetServer.BuymailThread", "Send (thread) mail to " + user);
+            Thread thread = new Thread(delegate() { this.BuyMail(user, list); });
+            thread.Start();
+        }
 
         /// <summary>
         /// Allows handling of an Request. Returns true, if data is available/no error occured
@@ -326,9 +333,16 @@ namespace ConvenienceBackend
             msg += "Vielen Dank und guten Durst/Appetit, " + System.Environment.NewLine + "Deine Getraenkekasse";
 
 
-            this.SendMail(mail, msg);
+            bool success = this.SendMail(mail, msg);
 
-            
+            if (success) 
+            { 
+                Logger.Log("ConNetServer.BuyMail", "Mail was sent");
+            }
+            else 
+            { 
+                Logger.Log("ConNetServer.BuyMail", "Mail was NOT sent"); 
+            }
         }
 
         public Boolean SendMail(String to, String message)
@@ -356,6 +370,7 @@ namespace ConvenienceBackend
             catch (Exception e)
             {
                 Logger.Log("ConNetServer.SendMail", "Mail-Fail: " + e.Message);
+                return false;
             }
 
             return true;
