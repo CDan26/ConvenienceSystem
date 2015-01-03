@@ -8,9 +8,9 @@ namespace ConvenienceFormClient
     public enum State
     {
         START,
-        CONNECTED,
         UPDATED,
         USERS,
-        PRICES
+        PRICES,
+        KEYDATES
     }
 }

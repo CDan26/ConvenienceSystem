@@ -16,9 +16,11 @@ namespace ConvenienceFormClient
         {
             this.cn = new ConNetClient();
             InitializeComponent();
+            this.ChangeState(State.START);
         }
 
-        private ConNetClient cn;        
+        private ConNetClient cn;
+        private State state;
 
         public void ChangeState(State state)
         {
@@ -35,17 +37,6 @@ namespace ConvenienceFormClient
                     this.textLog.AppendText("Changed to State START" + System.Environment.NewLine);
                     break;
                 
-                case State.CONNECTED:
-                    this.closeConnectionToolStripMenuItem.Enabled = true;
-                    this.connectToolStripMenuItem.Enabled = false;
-                    this.updateDataToolStripMenuItem.Enabled = true;
-                    this.showToolStripMenuItem.Enabled = false;
-                    this.editToolStripMenuItem.Enabled = false;
-                    this.dataGridView1.Enabled = false;
-
-                    this.textLog.AppendText("Changed to State CONNECTED" + System.Environment.NewLine);
-                    break;
-
                 case State.PRICES:
                     this.closeConnectionToolStripMenuItem.Enabled = true;
                     this.connectToolStripMenuItem.Enabled = false;
@@ -53,6 +44,8 @@ namespace ConvenienceFormClient
                     this.showToolStripMenuItem.Enabled = true;
                     this.editToolStripMenuItem.Enabled = true;
                     this.dataGridView1.Enabled = true;
+                    //this.dataGridView1.EditMode = DataGridViewEditMode.EditOnKeystrokeOrF2;
+                    //this.dataGridView1.ReadOnly = false;
 
                     this.textLog.AppendText("Changed to State PRICES" + System.Environment.NewLine);
                     break;
@@ -78,7 +71,20 @@ namespace ConvenienceFormClient
 
                     this.textLog.AppendText("Changed to State USERS" + System.Environment.NewLine);
                     break;
+
+                case State.KEYDATES:
+                    this.closeConnectionToolStripMenuItem.Enabled = true;
+                    this.connectToolStripMenuItem.Enabled = false;
+                    this.updateDataToolStripMenuItem.Enabled = true;
+                    this.showToolStripMenuItem.Enabled = true;
+                    this.editToolStripMenuItem.Enabled = true;
+                    this.dataGridView1.Enabled = true;
+                    this.dataGridView1.ReadOnly = false;
+
+                    this.textLog.AppendText("Changed to State KEYDATES" + System.Environment.NewLine);
+                    break;
             }
+            this.state = state;
         }
 
 
@@ -86,8 +92,8 @@ namespace ConvenienceFormClient
         private void connectToolStripMenuItem_Click(object sender, EventArgs e)
         {
             this.cn.Connect();
-            //TODO: no connection? -> abort
-            this.ChangeState(State.CONNECTED);
+            this.cn.Update();
+            this.ChangeState(State.UPDATED);
         }
 
         private void closeConnectionToolStripMenuItem_Click(object sender, EventArgs e)
@@ -95,6 +101,8 @@ namespace ConvenienceFormClient
             this.ChangeState(State.START);
             this.cn.Close();
         }
+
+        DataGridAdapter dg;
 
         private void usersToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -106,9 +114,18 @@ namespace ConvenienceFormClient
             //List<KeyValuePair<String, Double>> list = new List<KeyValuePair<string, double>>();
             //list.AddRange(cn.cs.Users);
             //dataGridView1.DataSource = list;
-            dataGridView1.DataSource = this.cn.Users.ToArray();
+            //dataGridView1.DataSource = this.cn.Users.ToArray();
+
+            dg = new DataGridAdapter();
+            dg.ImportUserData(this.cn.Users);
+            dataGridView1.DataSource = dg.Table;
+
             dataGridView1.EditMode = DataGridViewEditMode.EditOnKeystrokeOrF2;
+            dataGridView1.ReadOnly = false;
+            dataGridView1.Enabled = true;
         }
+
+        public DataTable data;
 
         private void pricesToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -120,7 +137,16 @@ namespace ConvenienceFormClient
             //List<KeyValuePair<String, Double>> list = new List<KeyValuePair<string, double>>();
             //list.AddRange(cn.cs.Users);
             //dataGridView1.DataSource = list;
-            dataGridView1.DataSource = this.cn.Products.ToArray();
+            //dataGridView1.DataSource = this.cn.Products.ToArray();
+            //test dg
+
+            DataGridAdapter dg = new DataGridAdapter();
+            dg.ImportPricingData(this.cn.Products);
+            dataGridView1.DataSource = dg.Table;
+
+            dataGridView1.EditMode = DataGridViewEditMode.EditOnKeystrokeOrF2;
+            dataGridView1.Enabled = true;
+            dataGridView1.ReadOnly = false;
         }
 
         private void updateDataToolStripMenuItem_Click(object sender, EventArgs e)
@@ -153,6 +179,43 @@ namespace ConvenienceFormClient
 
             string caption = "About The Application";
             MessageBox.Show(text: message, caption: caption);
+        }
+
+        private void quitToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            //save changes?
+            if (this.state != State.START)
+            {
+                this.cn.Close();
+            }
+            this.Close();
+        }
+
+        private void keydatesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.ChangeState(State.KEYDATES);
+
+            this.cn.UpdateKeydates();
+            DataGridAdapter da = new DataGridAdapter();
+            da.ImportKeydateData(cn.Keydates);
+            dataGridView1.DataSource = da.Table;
+
+            //textLog.AppendText("#Keydates: " + this.cn.Keydates.Count + System.Environment.NewLine);
+            //dataGridView1.DataSource = this.cn.Users.ToArray();
+
+            dataGridView1.EditMode = DataGridViewEditMode.EditOnKeystrokeOrF2;
+        }
+
+        private void userscompleteToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.ChangeState(State.USERS);
+
+            List<Tuple<int, string, double, string, string>> list = this.cn.GetFullUsers();
+
+            DataGridAdapter da = new DataGridAdapter();
+            da.ImportUserData(list);
+            dataGridView1.DataSource = da.Table;
+            dataGridView1.EditMode = DataGridViewEditMode.EditOnKeystrokeOrF2;
         }
     }
 }

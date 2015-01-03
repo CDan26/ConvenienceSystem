@@ -59,7 +59,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ConNetServer.cs" />
-    <Compile Include="ConvenienceClient.cs" />
     <Compile Include="ConNetClient.cs" />
     <Compile Include="ConvenienceServer.cs" />
     <Compile Include="Logger.cs" />

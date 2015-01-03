@@ -10,28 +10,34 @@ using System.Data;
 
 namespace ConvenienceBackend
 {
-    public class ConvenienceServer
+    internal class ConvenienceServer
     {
         private MySqlConnection Connection;
 
-        public Dictionary<String,Double> Users;
-        public Dictionary<String, Double> Products;
-        public Dictionary<String, String> Mails;
+        //public Dictionary<String,Double> Users;
+        //public List<Tuple<int, string, double, string, string>> FullUsers;
+        //public Dictionary<String, Double> Products;
+        //public List<Tuple<int, string, double, string>> FullProducts;
+        //public Dictionary<String, String> Mails;
         //public Dictionary<String, String> KeyDates;
         /// <summary>
         /// List of recent Accounting Activites
         /// Tuples for (Date, user, price, comment)
         /// </summary>
-        public List<Tuple<String, String, Double, String>> Accounting;
-        public List<Tuple<String, String>> KeyDates;
+        //public List<Tuple<String, String, Double, String>> Accounting;
+        //public List<Tuple<String, String>> KeyDates;
 
-        public ConvenienceServer()
+        internal ConvenienceServer()
         {
-            Users = new Dictionary<string, double>();
-            Products = new Dictionary<string, double>();
-            Mails = new Dictionary<string, string>();
-            Accounting = new List<Tuple<string, string, double, string>>();
-            KeyDates = new List<Tuple<string, string>>();
+            //Users = new Dictionary<string, double>();
+            //FullUsers = new List<Tuple<int, string, double, string, string>>();
+            //Products = new Dictionary<string, double>();
+            //FullProducts = new List<Tuple<int, string, double, string>>();
+            //Mails = new Dictionary<string, string>();
+            //Accounting = new List<Tuple<string, string, double, string>>();
+            //KeyDates = new List<Tuple<string, string>>();
+
+            //do some init stuff if needed
         }
 
         private void Connect()
@@ -44,38 +50,43 @@ namespace ConvenienceBackend
           
         }
 
-        public void Update()
-        {
-            this.Connect();
-            this.GetUsers();
-            this.GetProducts();
-            this.GetMails();
-            this.GetAccounting();
-            this.GetKeyDates();
-            this.Close();
-        }
+        //internal void Update()
+        //{
+        //    this.Connect();
+        //    this.GetUsers();
+        //    this.GetProducts();
+        //    this.GetMails();
+        //    this.GetAccounting();
+        //    this.GetKeyDates();
+        //    this.Close();
+        //}
 
 
 
-        private void GetAccounting(Boolean all=false)
+        internal List<Tuple<String, String, Double, String>> GetAccounting(Boolean all = false)
         {
             //Get all or only the last 25 accounting activities
             MySqlDataReader reader;
+            List<Tuple<String, String, Double, String>> Accounting = new List<Tuple<string,string,double,string>>();
             if (all)
             {
                 reader = this.Query("SELECT * FROM gk_accounting ORDER BY gk_accounting.date DESC");
             }
             else
             { 
-                reader = this.Query("SELECT * FROM gk_accounting ORDER BY gk_accounting.date DESC LIMIT 0,25");
+                reader = this.Query("SELECT * FROM gk_accounting ORDER BY gk_accounting.date DESC LIMIT 0,10");
             }
-            Accounting.Clear();
             while (reader.Read())
             {
-                Accounting.Add(new Tuple<string, string, double, string>(reader.GetString("date"), reader.GetString("user"), reader.GetDouble("price"), reader.GetString("comment")));
+                Accounting.Add(new Tuple<string, string, double, string>(
+                    reader.GetString("date"), 
+                    reader.GetString("user"), 
+                    reader.GetDouble("price"), 
+                    reader.GetString("comment")));
             }
 
             reader.Close();
+            return Accounting;
 
         }
 
@@ -88,32 +99,32 @@ namespace ConvenienceBackend
             }
         }
 
-        public void Test()
-        {
-            Console.WriteLine("[Test] starting Connection");
-            this.Connect();
-            Console.WriteLine("[Test] starting Query GetUsers");
-            this.GetUsers();
-            Console.WriteLine("[Test] starting Query GetProducts");
-            this.GetProducts();
-            Console.WriteLine("[Test] starting Query GetMails");
-            this.GetMails();
-            Console.WriteLine("[Test] starting Decimal Test");
-            this.DecTest();
-            Console.WriteLine("[Test] Test finished");
-        }
+        //public void Test()
+        //{
+        //    Console.WriteLine("[Test] starting Connection");
+        //    this.Connect();
+        //    Console.WriteLine("[Test] starting Query GetUsers");
+        //    this.GetUsers();
+        //    Console.WriteLine("[Test] starting Query GetProducts");
+        //    this.GetProducts();
+        //    Console.WriteLine("[Test] starting Query GetMails");
+        //    this.GetMails();
+        //    Console.WriteLine("[Test] starting Decimal Test");
+        //    this.DecTest();
+        //    Console.WriteLine("[Test] Test finished");
+        //}
 
-        private void DecTest()
-        {
-            this.Connect();
-            MySqlDataReader reader = this.Query("SELECT *,SUM(price) FROM gk_accounting WHERE date >= (SELECT MAX(keydate) FROM gk_keydates) GROUP BY user");
-            while (reader.Read())
-            {
-                Console.WriteLine(reader.GetString("user") + ", " + reader.GetDouble("SUM(price)"));
-            }
-            reader.Close();
-            this.Close();
-        }
+        //private void DecTest()
+        //{
+        //    this.Connect();
+        //    MySqlDataReader reader = this.Query("SELECT *,SUM(price) FROM gk_accounting WHERE date >= (SELECT MAX(keydate) FROM gk_keydates) GROUP BY user");
+        //    while (reader.Read())
+        //    {
+        //        Console.WriteLine(reader.GetString("user") + ", " + reader.GetDouble("SUM(price)"));
+        //    }
+        //    reader.Close();
+        //    this.Close();
+        //}
 
         private MySqlDataReader Query(String stm)
         {
@@ -137,33 +148,75 @@ namespace ConvenienceBackend
             return reader;
         }
 
-        private void GetUsers()
+        internal Dictionary<String, Double> GetUsers()
         {
             MySqlDataReader reader = this.Query("SELECT * FROM gk_user WHERE gk_user.state='active' ORDER BY username ASC LIMIT 0,200");
-            Users.Clear();
+            Dictionary<String, Double> Users = new Dictionary<string, double>();
+
             while (reader.Read())
             {
-                /*if (Users.ContainsKey(reader.GetString("username")))
-                {
-                    Users.Remove(reader.GetString("username"));
-                }*/
                 Users.Add(reader.GetString("username"),reader.GetDouble("debt"));
             }
 
-            //Debug
-            /*foreach (KeyValuePair<String,Double> s in Users)
-            {
-                Console.WriteLine("[GetUsers] user: " + s.Key+" with debt: "+s.Value);
-            }*/
             reader.Close();
-            //return users;
+            return Users;
         }
+
+        internal List<Tuple<int, string, double, string, string>> GetFullUsers()
+        {
+            MySqlDataReader reader = this.Query("SELECT * FROM gk_user ORDER BY username ASC LIMIT 0,200");
+
+            List<Tuple<int, string, double, string, string>> list = new List<Tuple<int, string, double, string, string>>();
+            
+            while (reader.Read())
+            {
+                string comment;
+                try 
+                { 
+                    comment = reader.GetString("comment"); 
+                }
+                catch (Exception)
+                {
+                    comment = "";
+                }
+                list.Add(new Tuple<int, string, double, string, string>(
+                    reader.GetInt32("ID"),
+                    reader.GetString("username"),
+                    reader.GetDouble("debt"),
+                    reader.GetString("state"),
+                    comment));
+            }
+            
+            reader.Close();
+            return list;
+        }
+
+        internal List<Tuple<int, string, double, string>> GetFullProducts()
+        {
+            MySqlDataReader reader = this.Query("SELECT * FROM gk_pricing ORDER BY username ASC LIMIT 0,200");
+
+            List<Tuple<int, string, double, string>> list = new List<Tuple<int, string, double, string>>();
+
+            while (reader.Read())
+            {
+                list.Add(new Tuple<int, string, double, string>(
+                    reader.GetInt32("ID"),
+                    reader.GetString("product"),
+                    reader.GetDouble("price"),
+                    reader.GetString("comment")
+                    ));
+            }
+
+            reader.Close();
+            return list;
+        }
+
 
         /// <summary>
         /// Gets the Sum of products bought in the system since the last Keydate
         /// </summary>
         /// <returns>A Dictionary of username (key) and the sum of debt (value)</returns>
-        private Dictionary<String,Double> GetDebtSinceKeyDate()
+        internal Dictionary<String,Double> GetDebtSinceKeyDate()
         {
             MySqlDataReader reader = this.Query("SELECT *,SUM(price) FROM gk_accounting WHERE gk_accounting.date>=(SELECT MAX(keydate) FROM gk_keydates) GROUP BY user LIMIT 0,200");
 
@@ -181,7 +234,7 @@ namespace ConvenienceBackend
         /// Gets the Sum of products bought in the system since the provided Keydate (form: yyyy-mm-dd)
         /// </summary>
         /// <returns>A Dictionary of username (key) and the sum of debt (value)</returns>
-        private Dictionary<String, Double> GetDebtSinceKeyDate(String keydate)
+        internal Dictionary<String, Double> GetDebtSinceKeyDate(String keydate)
         {
             MySqlDataReader reader = this.Query("SELECT *,SUM(price) FROM gk_accounting WHERE gk_accounting.date>=\""+keydate+"\" GROUP BY user LIMIT 0,200");
 
@@ -200,7 +253,7 @@ namespace ConvenienceBackend
         /// Beware! uses the "comment" column of the DB - on-product-comments are possible!
         /// </summary>
         /// <param name="user">The user</param>
-        private Dictionary<String,Int32> GetProductsCountForUser(String user)
+        internal Dictionary<String, Int32> GetProductsCountForUser(String user)
         {
             Dictionary<String, Int32> prod = new Dictionary<string, Int32>();
 
@@ -219,7 +272,7 @@ namespace ConvenienceBackend
         /// </summary>
         /// <param name="keydate">the keydate</param>
         /// <param name="comment">the comment that shuld be added for this keydate</param>
-        private void InsertKeyDate(String keydate="", String comment="Added via Application without comment")
+        internal void InsertKeyDate(String keydate = "", String comment = "Added via Application without comment")
         {
             //No keydate provided? use current datetime!
             if (keydate=="")
@@ -238,48 +291,47 @@ namespace ConvenienceBackend
             }
         }
 
-        public Dictionary<String, Double> GetUserDict()
+        internal Dictionary<String, Double> GetUserDict()
         {
             //if (this.Users == null) return null;
-            return this.Users;
+            //return this.Users;
+            return this.GetUsers();
         }
 
-        public Dictionary<String, Double> GetProductsDict()
+        internal Dictionary<String, Double> GetProductsDict()
         {
             //if (this.Products == null) return null;
-            return this.Products;
+            //return this.Products;
+            return this.GetProducts();
         }
 
-        public Dictionary<String, String> GetMailsDict()
+        internal Dictionary<String, String> GetMailsDict()
         {
             //if (this.Mails == null) return null;
-            return this.Mails;
+            //return this.Mails;
+            return this.GetMails();
         }
 
-        private void GetProducts()
+        internal Dictionary<String, Double> GetProducts()
         {
             MySqlDataReader reader = this.Query("SELECT * FROM gk_pricing ORDER BY product ASC LIMIT 0,200");
-            Products.Clear();
+
+            Dictionary<String, Double> Products = new Dictionary<string, double>();
+
             while (reader.Read())
             {
-                /*if (Products.ContainsKey(reader.GetString("product")))
-                {
-                    Products.Remove(reader.GetString("product"));
-                }*/
                 Products.Add(reader.GetString("product"),reader.GetDouble("price"));
             }
-
-            //Debug
-            /*foreach (KeyValuePair<String, Double> s in Products)
-            {
-                Console.WriteLine("[GetProducts] Product: " + s.Key + " with price: " + s.Value);
-            }*/
             reader.Close();
+            return Products;
         }
 
-        private void GetKeyDates()
+
+        internal List<Tuple<String, String>> GetKeyDates()
         {
             MySqlDataReader reader = this.Query("SELECT * FROM gk_keydates ORDER BY keydate DESC LIMIT 0,200");
+
+            List<Tuple<String, String>> KeyDates = new List<Tuple<string, string>>();
             
             while (reader.Read())
             {
@@ -287,37 +339,32 @@ namespace ConvenienceBackend
             }
 
             reader.Close();
+            return KeyDates;
         }
 
-        public List<Tuple<String,String>> GetKeyDatesList()
+        internal List<Tuple<String, String>> GetKeyDatesList()
         {
             //if (this.KeyDates == null) return null;
-            return this.KeyDates;
+            //return this.KeyDates;
+            return this.GetKeyDates();
         }
 
-        private void GetMails()
+        internal Dictionary<String, String> GetMails()
         {
             
             MySqlDataReader reader = this.Query("SELECT * FROM gk_mail WHERE active='true'");
-            Mails.Clear();
+            Dictionary<String, String> Mails = new Dictionary<string, string>();
+
             while (reader.Read())
             {
-                /*if (Mails.ContainsKey(reader.GetString("username")))
-                {
-                    Mails.Remove(reader.GetString("username"));
-                }*/
                 Mails.Add(reader.GetString("username"), reader.GetString("adress"));
             }
 
-            //Debug
-            /*foreach (KeyValuePair<String, Double> s in Products)
-            {
-                Console.WriteLine("[GetProducts] Product: " + s.Key + " with price: " + s.Value);
-            }*/
             reader.Close();
+            return Mails;
         }
 
-		public Boolean Buy(String username, List<String> products)
+        internal Boolean Buy(String username, List<String> products)
 		{
 			//Console.WriteLine ("CS, u:" + username + ", p:" + products);
 			DateTime dt = DateTime.Now;
@@ -328,10 +375,15 @@ namespace ConvenienceBackend
 			Double fullPrice = 0;
 			String plist = "";
 
+            //get Products and users
+            //TODO: do this stuff inside SQL
+            Dictionary<string, double> prod = this.GetProducts();
+            Dictionary<string, double> user = this.GetUsers();
+
 			foreach (String s in products) 
 			{
 				Double p;
-                Boolean b = this.Products.TryGetValue(s, out p);
+                Boolean b = prod.TryGetValue(s, out p);
 				fullPrice = fullPrice + p;
 				plist = plist + s + ", ";
 				String pString = p.ToString ().Replace (',', '.');
@@ -351,7 +403,7 @@ namespace ConvenienceBackend
 
 			//Update user's debt
 			Double nDebt;
-			Users.TryGetValue (username, out nDebt);
+			user.TryGetValue (username, out nDebt);
 			nDebt = nDebt + fullPrice;
 			String newDebt = nDebt.ToString().Replace(',','.');
 			String cmd2 = "UPDATE `gk_user` SET `debt` = '"+newDebt+"' WHERE `gk_user`.`username` = '"+username+"';";
@@ -366,7 +418,7 @@ namespace ConvenienceBackend
 			return true;
 		}
 
-        private String GenerateRandomString()
+        internal String GenerateRandomString()
         {
             String chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!§$%&/()=?#°+-.:,;<>";
             Random random = new Random();
@@ -377,14 +429,7 @@ namespace ConvenienceBackend
             return result;
         }
 
-		private Double GetPrice(String s)
-		{
-			Double p = 0;
-			this.Products.TryGetValue (s, out p);
-			return p;
-		}
-
-        public String Register(String name)
+        internal String Register(String name)
         {
             String id = "";
 

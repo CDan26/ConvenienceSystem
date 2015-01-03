@@ -13,12 +13,12 @@ namespace ConvenienceBackend
 	{
 
 
-		public ConvenienceClient cs;
+		//public ConvenienceClient cs;
 
 		public ConNetClient()
 		{
-
-			this.cs = new ConvenienceClient();
+            //init stuff...            
+			//this.cs = new ConvenienceClient();
 		}
 #if (!BINARY)
 		private StreamReader sr;
@@ -32,8 +32,12 @@ namespace ConvenienceBackend
 		private Stream s;
 		private TcpClient client;
 
+        //Base data - kept local from start
 		public Dictionary<String, Double> Users;
 		public Dictionary<String, Double> Products;
+        public List<Tuple<String, String>> Keydates;
+        //further data - only when asking for it
+        private Object answer = null;
 
         public static Boolean isBinaryBackend()
         {
@@ -84,7 +88,7 @@ namespace ConvenienceBackend
 		/// </summary>
 		/// <returns><c>true</c>, if command was sent and the answer handled successfully, <c>false</c> otherwise.</returns>
 		/// <param name="command">The command to be sent</param>
-		public Boolean ClientCMD(String command)
+		private Boolean ClientCMD(String command)
 		{
 			//mom
 			//if (Server) return false;
@@ -116,7 +120,7 @@ namespace ConvenienceBackend
 
         /// <summary>
         /// reorganizes the command for the binary writer.
-        /// In future, a more felxible method should be implemented
+        /// In future, a more flexible method should be implemented
         /// </summary>
         private void ClientCMDBinary(string command)
         {
@@ -145,6 +149,23 @@ namespace ConvenienceBackend
 
         }
 
+        public void UpdateKeydates()
+        {
+            this.ClientCMD("keydates" + Settings.MsgSeperator + "gkclient");
+        }
+
+        public List<Tuple<int,string,double,string,string>> GetFullUsers()
+        {
+            bool a = this.ClientCMD("fullusers" + Settings.MsgSeperator + "gkclient");
+            if (a)
+            {
+                //successfull
+                return ((List<Tuple<int,string,double,string,string>>) this.answer);
+            }
+            //failed - return null
+            return null;
+        }
+
 #if (BINARY)
         private bool ClientHandleBinary(String command)
         {
@@ -161,50 +182,73 @@ namespace ConvenienceBackend
 
 			switch (p1)
 			{
-			case "users":
-				try
-				{
-					Dictionary<String, Double> dict = BinarySerializers.DeserializeDictSD(sr);
-					//success!
-					this.Users = dict;
-					Logger.Log("got users");
-					return true;
-				}
-				catch (Exception)
-				{
-					return false;
-				}
-			case "update":
-				answer = sr.ReadString();
-                return (answer == Settings.MsgACK);
+			    case "users":
+				    try
+				    {
+					    Dictionary<String, Double> dict = BinarySerializers.DeserializeDictSD(sr);
+					    //success!
+					    this.Users = dict;
+					    Logger.Log("got users");
+					    return true;
+				    }
+				    catch (Exception)
+				    {
+					    return false;
+				    }
+			    case "fullusers":
+				    try
+				    {
+                        var dict = BinarySerializers.DeserializeListtISDSS(sr);
+                        this.answer = dict;
+					    return true;
+				    }
+				    catch (Exception)
+				    {
+					    return false;
+				    }
+			    case "update":
+				    answer = sr.ReadString();
+				    return (answer == Settings.MsgACK);
 
-			case "prices":
-				try
-				{
-					Dictionary<String, Double> dict = BinarySerializers.DeserializeDictSD(sr);
-					//success!
-					this.Products = dict;
-                    Logger.Log("got Products");
-					return true;
-				}
-				catch (Exception)
-				{
-					return false;
-				}
+			    case "prices":
+				    try
+				    {
+					    Dictionary<String, Double> dict = BinarySerializers.DeserializeDictSD(sr);
+					    //success!
+					    this.Products = dict;
+					    Logger.Log("got Products");
+					    return true;
+				    }
+				    catch (Exception)
+				    {
+					    return false;
+				    }
 
-			case "register":
-				//not yet Implemented
-				return true;
+			    case "register":
+				    //not yet Implemented
+				    return true;
 
-            case "buy":
-                //bought successfully
-                answer = sr.ReadString();
-                return (answer == Settings.MsgACK);
+			    case "keydates":
+				    try
+				    {
+					    this.Keydates = BinarySerializers.DeserializeListtS(sr);
+					    Logger.Log("got Keydates");
+					    return true;
+				    }
+				    catch (Exception)
+				    {
+					    return false;
+				    }
 
-			default:
-				//what happened?
-				return true;
-			}
+			    case "buy":
+				    //bought successfully
+				    answer = sr.ReadString();
+				    return (answer == Settings.MsgACK);
+
+			    default:
+				    //what happened?
+				    return true;
+			    }
 
         }
 

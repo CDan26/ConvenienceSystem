@@ -15,11 +15,10 @@ namespace ConvenienceBackend
     {
 
 
-        public ConvenienceServer cs;
+        private ConvenienceServer cs;
 
         public ConNetServer()
         {
-
             this.cs = new ConvenienceServer();
         }
 
@@ -43,8 +42,8 @@ namespace ConvenienceBackend
 #endif
         }
 
-        public Dictionary<String, Double> Users;
-        public Dictionary<String, Double> Products;
+        //public Dictionary<String, Double> Users;
+        //public Dictionary<String, Double> Products;
 
         public Boolean Connect()
         {
@@ -156,7 +155,8 @@ namespace ConvenienceBackend
                     //answer = "";
                     return true;
                 case "update":
-                    cs.Update();
+                    //cs.Update();
+                    //not supported anymore!
                     sw.Write(Settings.MsgACK);
                     sw.Flush();
                     return true;
@@ -169,7 +169,14 @@ namespace ConvenienceBackend
                     //get users
                     BinarySerializers.SerializeDictSD(cs.GetUserDict(), sw);
                     return true;
-
+                case "fullusers":
+                    //get users
+                    //BinarySerializers.SerializeDictSD(cs.GetUserDict(), sw);
+                    BinarySerializers.SerializeListISDSS(cs.GetFullUsers(), sw);
+                    return true;
+                case "keydates":
+                    BinarySerializers.SerializeListS(cs.GetKeyDatesList(), sw);
+                    return true;
                 case "buy":
                     List<String> list = new List<String>();
                     String user = sr.ReadString();
@@ -220,7 +227,7 @@ namespace ConvenienceBackend
         /// Allows handling of an Request. Returns true, if data is available/no error occured
         /// Works only for the non-binary (legacy) version
         /// </summary>
-        public bool ServerHandle(String handle, out String answer)
+        private bool ServerHandle(String handle, out String answer)
         {
             //msg parts have to be seperated by "|" (now: Settings.MsgSeperator)
             Logger.Log("ConNetServer.ServerHandle", "Serverhandle: " + handle);
@@ -250,7 +257,8 @@ namespace ConvenienceBackend
                     //answer = "";
                     return true;
                 case "update":
-                    cs.Update();
+                    //cs.Update();
+                    //not supported anymore!
                     answer = "done";
                     return true;
                 case "prices":
@@ -345,7 +353,7 @@ namespace ConvenienceBackend
             }
         }
 
-        public Boolean SendMail(String to, String message)
+        private Boolean SendMail(String to, String message)
         {
             //Console.WriteLine("Now, Sending Mail!");
             ServicePointManager.ServerCertificateValidationCallback = (sender, certificate, chain, sslPolicyErrors) => true;
