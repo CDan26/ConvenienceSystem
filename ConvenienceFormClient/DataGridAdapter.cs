@@ -196,6 +196,48 @@ namespace ConvenienceFormClient
             this.IsDirty = false;
         }
 
+		public void ImportDebtData(Dictionary<string, double> list)
+		{
+			//Basically for small user information
+			Table = new DataTable("Debt-Table");
+
+			//Create the table structure
+
+			DataColumn column;
+
+			// Create second column.
+			column = new DataColumn();
+			column.DataType = System.Type.GetType("System.String");
+			column.ColumnName = "username";
+			column.Caption = "User";
+			column.ReadOnly = true;
+			column.Unique = false;
+			// Add the column to the table.
+			Table.Columns.Add(column);
+
+			column = new DataColumn();
+			column.DataType = System.Type.GetType("System.Double");
+			column.ColumnName = "debt";
+			column.Caption = "SUM(price)";
+			column.ReadOnly = true;
+			column.Unique = false;
+			// Add the column to the table.
+			Table.Columns.Add(column);
+
+			//now import data into this structure
+			foreach (KeyValuePair<string, double> tup in list)
+			{
+				DataRow row;
+				row = Table.NewRow();
+				row["username"] = tup.Key;
+				row["debt"] = tup.Value;
+				Table.Rows.Add(row);
+			}
+
+			//Now, the data is not corrupted...
+			this.IsDirty = false;
+		}
+
         public void ImportPricingData(Dictionary<string, double> list)
         {
             //Basically for small user information
@@ -273,6 +315,67 @@ namespace ConvenienceFormClient
                 row = Table.NewRow();
                 row["keydate"] = tup.Item1;
                 row["comment"] = tup.Item2;
+                Table.Rows.Add(row);
+            }
+
+            //Now, the data is not corrupted...
+            this.IsDirty = false;
+        }
+
+        internal void ImportActivityData(List<Tuple<string, string, double, string>> list)
+        {
+            //Basically for full user information
+            Table = new DataTable("Activity-Table");
+
+            //Create the table structure
+
+            DataColumn column = new DataColumn();
+            column.DataType = System.Type.GetType("System.String");
+            column.ColumnName = "date";
+            column.Caption = "Date";
+            column.ReadOnly = true;
+            column.Unique = false;
+            // Add the Column
+            Table.Columns.Add(column);
+
+            // Create second column.
+            column = new DataColumn();
+            column.DataType = System.Type.GetType("System.String");
+            column.ColumnName = "user";
+            column.Caption = "User";
+            column.ReadOnly = true;
+            column.Unique = false;
+            // Add the column to the table.
+            Table.Columns.Add(column);
+
+            column = new DataColumn();
+            column.DataType = System.Type.GetType("System.Double");
+            column.ColumnName = "price";
+            column.Caption = "Price";
+            column.ReadOnly = true;
+            column.Unique = false;
+            // Add the column to the table.
+            Table.Columns.Add(column);
+
+            column = new DataColumn();
+            column.DataType = System.Type.GetType("System.String");
+            column.ColumnName = "comment";
+            column.Caption = "Comment";
+            column.ReadOnly = false;
+            column.Unique = false;
+            // Add the column to the table.
+            Table.Columns.Add(column);
+
+
+            //now import data into this structure
+            foreach (Tuple<string, string, double, string> tup in list)
+            {
+                DataRow row;
+                row = Table.NewRow();
+                row["date"] = tup.Item1;
+                row["user"] = tup.Item2;
+                row["price"] = tup.Item3;
+                row["comment"] = tup.Item4;
                 Table.Rows.Add(row);
             }
 

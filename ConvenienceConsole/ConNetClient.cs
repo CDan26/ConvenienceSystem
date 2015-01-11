@@ -118,6 +118,30 @@ namespace ConvenienceBackend
 			//return true;
 		}
 
+        public Boolean InsertKeyDate(string keydate="",string comment="")
+        {
+            string command = "addkeydate" + Settings.MsgSeperator;
+            if (keydate == "")
+            {
+                command = command + Settings.MsgACK + Settings.MsgSeperator;
+            }
+            else
+            {
+                command = command + keydate + Settings.MsgSeperator;
+            }
+
+            if (comment == "")
+            {
+                command = command + Settings.MsgACK + Settings.MsgSeperator;
+            }
+            else
+            {
+                command = command + comment + Settings.MsgSeperator;
+            }
+
+            return this.ClientCMD(command);
+        }
+
         /// <summary>
         /// reorganizes the command for the binary writer.
         /// In future, a more flexible method should be implemented
@@ -165,6 +189,28 @@ namespace ConvenienceBackend
             //failed - return null
             return null;
         }
+
+        public List<Tuple<string,string,double,string>> GetActivity()
+        {
+            bool a = this.ClientCMD("activity" + Settings.MsgSeperator + "gkclient");
+            if (a)
+            {
+                //successfull
+                return ((List<Tuple<string, string, double, string>>)this.answer);
+            }
+            //failed - return null
+            return null;
+        }
+
+		public Dictionary<string,double> GetDebtSinceKeydate()
+		{
+			bool a = this.ClientCMD ("lastkeydate" + Settings.MsgSeperator + "gkclient");
+			if (a)
+			{
+				return ((Dictionary<string,double>)this.answer);
+			}
+			return null;
+		}
 
 #if (BINARY)
         private bool ClientHandleBinary(String command)
@@ -228,6 +274,16 @@ namespace ConvenienceBackend
 				    //not yet Implemented
 				    return true;
 
+				case "lastkeydate":
+					Dictionary<string,double> dictDebt = BinarySerializers.DeserializeDictSD (sr);
+					this.answer = dictDebt;
+					return true;
+
+                case "activity":
+                    List<Tuple<string, string, double, string>> actlist = BinarySerializers.DeserializeListtSSDS(sr);
+                    this.answer = actlist;
+                    return true;
+
 			    case "keydates":
 				    try
 				    {
@@ -239,7 +295,9 @@ namespace ConvenienceBackend
 				    {
 					    return false;
 				    }
-
+                case "addkeydate":
+                    answer = sr.ReadString();
+                    return (answer == Settings.MsgACK);
 			    case "buy":
 				    //bought successfully
 				    answer = sr.ReadString();

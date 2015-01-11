@@ -1,10 +1,15 @@
 ﻿<Properties>
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="ConvenienceConsole/ConNetClient.cs">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Release" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="ConvenienceConsole/ConvenienceServer.cs">
     <Files>
-      <File FileName="ConvenienceConsole/ConNetServer.cs" Line="10" Column="10" />
-      <File FileName="ConvenienceConsole/ConvenienceServer.cs" Line="1" Column="1" />
-      <File FileName="ConvenienceConsole/ConNetClient.cs" Line="1" Column="1" />
+      <File FileName="ConvenienceConsole/ConNetServer.cs" Line="86" Column="86" />
+      <File FileName="ConvenienceConsole/ConvenienceServer.cs" Line="179" Column="179" />
+      <File FileName="ConvenienceConsole/ConNetClient.cs" Line="36" Column="36" />
+      <File FileName="ConvenienceFormClient/Form1.cs" Line="1" Column="1" />
+      <File FileName="ConvenienceFormClient/Form1.Designer.cs" Line="1" Column="1" />
+      <File FileName="ConvenienceFormClient/Form1.resx" Line="1" Column="1" />
+      <File FileName="ConvenienceFormClient/DataGridAdapter.cs" Line="4" Column="4" />
+      <File FileName="ConvenienceConsole/BinarySerializers.cs" Line="1" Column="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

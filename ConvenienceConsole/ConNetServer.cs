@@ -141,7 +141,7 @@ namespace ConvenienceBackend
         private bool ServerHandleBinary(string command)
         {
             //msg parts have to be seperated by "|" (now: Settings.MsgSeperator)
-            Logger.Log("ConNetServer.ServerHandle", "ServerhandleBinary: " + command);
+            Logger.Log("ConNetServer.ServerHandle", "ServerhandleBinary commend: " + command);
 
             //Get the client identifier
             String client = sr.ReadString();
@@ -149,66 +149,84 @@ namespace ConvenienceBackend
             
             switch (command)
             {
-                case "register":
-                    //TODO: Use in DB smewhere....
-                    //answer = this.cs.Register(p2);
-                    //answer = "";
-                    return true;
-                case "update":
-                    //cs.Update();
-                    //not supported anymore!
-                    sw.Write(Settings.MsgACK);
-                    sw.Flush();
-                    return true;
-                case "prices":
-                    //get prices
-                    BinarySerializers.SerializeDictSD(cs.GetProductsDict(), sw);
-                    return true;
-                //break;
-                case "users":
-                    //get users
-                    BinarySerializers.SerializeDictSD(cs.GetUserDict(), sw);
-                    return true;
-                case "fullusers":
-                    //get users
-                    //BinarySerializers.SerializeDictSD(cs.GetUserDict(), sw);
-                    BinarySerializers.SerializeListISDSS(cs.GetFullUsers(), sw);
-                    return true;
-                case "keydates":
-                    BinarySerializers.SerializeListS(cs.GetKeyDatesList(), sw);
-                    return true;
-                case "buy":
-                    List<String> list = new List<String>();
-                    String user = sr.ReadString();
-                    try
+            case "register":
+                //TODO: Use in DB smewhere....
+                //answer = this.cs.Register(p2);
+                //answer = "";
+                return true;
+            case "update":
+                //cs.Update();
+                //not supported anymore!
+                sw.Write(Settings.MsgACK);
+                sw.Flush();
+                return true;
+            case "prices":
+                //get prices
+                BinarySerializers.SerializeDictSD(cs.GetProductsDict(), sw);
+                return true;
+            //break;
+            case "users":
+                //get users
+                BinarySerializers.SerializeDictSD(cs.GetUserDict(), sw);
+                return true;
+            case "fullusers":
+                //get users
+                //BinarySerializers.SerializeDictSD(cs.GetUserDict(), sw);
+                BinarySerializers.SerializeListISDSS(cs.GetFullUsers(), sw);
+                return true;
+            case "keydates":
+                BinarySerializers.SerializeListS(cs.GetKeyDatesList(), sw);
+                return true;
+			case "lastkeydate":
+				BinarySerializers.SerializeDictSD(cs.GetDebtSinceKeyDate (), sw);	
+				return true;
+            case "activity":
+                BinarySerializers.SerializeListSSDS(cs.GetLastActivity(), sw);
+                return true;
+            case "addkeydate":
+                //command: keydate,client,keydate=MsgACK,comment=MsgACK
+                string keydate = sr.ReadString();
+                string comment = sr.ReadString();
+                if (keydate == Settings.MsgACK)
+                    keydate = "";
+                if (comment == Settings.MsgACK)
+                    comment = "";
+                cs.InsertKeyDate(keydate, comment);
+                sw.Write(Settings.MsgACK);
+                sw.Flush();
+                return true;
+            case "buy":
+                List<String> list = new List<String>();
+                String user = sr.ReadString();
+                try
+                {
+                    while (true)
                     {
-                        while (true)
-                        {
-                            String s = sr.ReadString();
-                            if (s == Settings.MsgACK)
-                                break;
-                            list.Add(s);
-                        }
+                        String s = sr.ReadString();
+                        if (s == Settings.MsgACK)
+                            break;
+                        list.Add(s);
                     }
-                    catch (Exception e)
-                    {
-                        Logger.Log("ConNetServer.ServerhandleBinary.Buy","Exception found: " + e.Message);
-                    }
-                    
-                    Boolean a = this.cs.Buy(user, list);
-                    if (a)
-                    {
-                        //send mail!
-                        this.BuyMailThread(user, list);
-                    }
-                    //answer = "done";
-                    sw.Write(Settings.MsgACK);
-                    return true;
+                }
+                catch (Exception e)
+                {
+                    Logger.Log("ConNetServer.ServerhandleBinary.Buy","Exception found: " + e.Message);
+                }
+                
+                Boolean a = this.cs.Buy(user, list);
+                if (a)
+                {
+                    //send mail!
+                    this.BuyMailThread(user, list);
+                }
+                //answer = "done";
+                sw.Write(Settings.MsgACK);
+                return true;
 
-                default:
-                    Logger.Log("ConNetServer.ServerHandle", "Invalid Command: " + command);
-                    sw.Write(Settings.MsgInvalid);
-                    return false;
+            default:
+                Logger.Log("ConNetServer.ServerHandleBinary", "Invalid Command: " + command);
+                sw.Write(Settings.MsgInvalid);
+                return false;
 
             }
         }

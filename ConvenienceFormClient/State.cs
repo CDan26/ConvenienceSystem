@@ -9,8 +9,6 @@ namespace ConvenienceFormClient
     {
         START,
         UPDATED,
-        USERS,
-        PRICES,
-        KEYDATES
+        DATA
     }
 }

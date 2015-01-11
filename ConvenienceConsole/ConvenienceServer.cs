@@ -231,6 +231,29 @@ namespace ConvenienceBackend
         }
 
         /// <summary>
+        /// Gets the (count) last activity elements of the system
+        /// </summary>
+        internal List<Tuple<string,string,double,string>> GetLastActivity(int count = 10)
+        {
+            MySqlDataReader reader = this.Query("SELECT * FROM gk_accounting ORDER BY gk_accounting.date DESC LIMIT 0,"+count);
+
+            List<Tuple<string, string, double, string>> Debts = new List<Tuple<string, string, double, string>>();
+
+            while (reader.Read())
+            {
+                //Debts.Add(reader.GetString("user"), reader.GetDouble("SUM(price)"));
+                string date = reader.GetString("date");
+                string user = reader.GetString("user");
+                double price = reader.GetDouble("price");
+                string comment = reader.GetString("comment");
+                Debts.Add(new Tuple<string, string, double, string>(date, user, price, comment));
+
+            }
+            reader.Close();
+            return Debts;
+        }
+
+        /// <summary>
         /// Gets the Sum of products bought in the system since the provided Keydate (form: yyyy-mm-dd)
         /// </summary>
         /// <returns>A Dictionary of username (key) and the sum of debt (value)</returns>
