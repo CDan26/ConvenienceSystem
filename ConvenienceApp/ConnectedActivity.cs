@@ -34,9 +34,9 @@ namespace ConvenienceApp
             // When not successfull, tell the user and go back!
 			try {
 				client = new ConNetClient();
-            	client.Connect();
+            	//client.Connect();
             	client.Update();
-				client.Close ();
+				//client.Close ();
 			}
 			catch (Exception)
 			{

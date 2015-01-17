@@ -77,7 +77,7 @@ namespace ConvenienceFormClient
         private void closeConnectionToolStripMenuItem_Click(object sender, EventArgs e)
         {
             this.ChangeState(State.START);
-            this.cn.Close();
+            //this.cn.Close();
         }
 
         DataGridAdapter dg;
@@ -164,7 +164,7 @@ namespace ConvenienceFormClient
             //save changes?
             if (this.state != State.START)
             {
-                this.cn.Close();
+                //this.cn.Close();
             }
             this.Close();
         }

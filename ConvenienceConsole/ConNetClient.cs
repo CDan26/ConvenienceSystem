@@ -47,7 +47,7 @@ namespace ConvenienceBackend
 		/// <summary>
 		/// Connects to the Server
 		/// </summary>
-		public Boolean Connect()
+		private Boolean Connect()
 		{
 
 			//Client-Mode
@@ -182,6 +182,21 @@ namespace ConvenienceBackend
             return null;
         }
 
+
+        public List<Tuple<int, string, double, string>> GetFullProducts()
+        {
+            this.Connect();
+            bool a = this.ClientCMD("fullproducts" + Settings.MsgSeperator + "gkclient");
+            this.Close();
+            if (a)
+            {
+                //successfull
+                return ((List<Tuple<int, string, double, string>>)this.answer);
+            }
+            //failed - return null
+            return null;
+        }
+
         public List<Tuple<string,string,double,string>> GetActivity()
         {
             this.Connect();
@@ -248,7 +263,19 @@ namespace ConvenienceBackend
 				    {
 					    return false;
 				    }
-			    case "update":
+                case "fullproducts":
+                    try
+                    {
+                        var dict = BinarySerializers.DeserializeListtISDS(sr);
+                        this.answer = dict;
+                        return true;
+                    }
+                    catch (Exception)
+                    {
+                        return false;
+                    }
+                
+                case "update":
 				    answer = sr.ReadString();
 				    return (answer == Settings.MsgACK);
 
@@ -325,7 +352,7 @@ namespace ConvenienceBackend
 		/// <summary>
 		/// Close the connection
 		/// </summary>
-		public void Close()
+		private void Close()
 		{
 			if (this.client != null)
             {

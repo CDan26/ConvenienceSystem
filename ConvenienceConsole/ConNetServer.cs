@@ -146,6 +146,9 @@ namespace ConvenienceBackend
                 //BinarySerializers.SerializeDictSD(cs.GetUserDict(), sw);
                 BinarySerializers.SerializeListISDSS(cs.GetFullUsers(), sw);
                 return true;
+            case "fullproducts":
+                BinarySerializers.SerializeListISDS(cs.GetFullProducts(), sw);
+                return true;
             case "keydates":
                 BinarySerializers.SerializeListS(cs.GetKeyDates(), sw);
                 return true;
