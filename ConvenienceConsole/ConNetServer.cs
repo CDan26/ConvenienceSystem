@@ -113,7 +113,7 @@ namespace ConvenienceBackend
         private bool ServerHandleBinary(string command)
         {
             //msg parts have to be seperated by "|" (now: Settings.MsgSeperator)
-            Logger.Log("ConNetServer.ServerHandle", "ServerhandleBinary commend: " + command);
+            Logger.Log("ConNetServer.ServerHandle", "ServerhandleBinary command: " + command);
 
             //Get the client identifier
             String client = sr.ReadString();

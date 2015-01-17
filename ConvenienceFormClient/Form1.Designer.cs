@@ -37,9 +37,6 @@
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.systemToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.connectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.updateDataToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.closeConnectionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.quitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.showToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -147,45 +144,21 @@
             // systemToolStripMenuItem
             // 
             this.systemToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.connectToolStripMenuItem,
-            this.updateDataToolStripMenuItem,
-            this.closeConnectionToolStripMenuItem,
             this.toolStripSeparator1,
             this.quitToolStripMenuItem});
             this.systemToolStripMenuItem.Name = "systemToolStripMenuItem";
             this.systemToolStripMenuItem.Size = new System.Drawing.Size(57, 20);
             this.systemToolStripMenuItem.Text = "System";
             // 
-            // connectToolStripMenuItem
-            // 
-            this.connectToolStripMenuItem.Name = "connectToolStripMenuItem";
-            this.connectToolStripMenuItem.Size = new System.Drawing.Size(234, 22);
-            this.connectToolStripMenuItem.Text = "Connect";
-            this.connectToolStripMenuItem.Click += new System.EventHandler(this.connectToolStripMenuItem_Click);
-            // 
-            // updateDataToolStripMenuItem
-            // 
-            this.updateDataToolStripMenuItem.Name = "updateDataToolStripMenuItem";
-            this.updateDataToolStripMenuItem.Size = new System.Drawing.Size(234, 22);
-            this.updateDataToolStripMenuItem.Text = "Update Data (Get From Server)";
-            this.updateDataToolStripMenuItem.Click += new System.EventHandler(this.updateDataToolStripMenuItem_Click);
-            // 
-            // closeConnectionToolStripMenuItem
-            // 
-            this.closeConnectionToolStripMenuItem.Name = "closeConnectionToolStripMenuItem";
-            this.closeConnectionToolStripMenuItem.Size = new System.Drawing.Size(234, 22);
-            this.closeConnectionToolStripMenuItem.Text = "Close Connection";
-            this.closeConnectionToolStripMenuItem.Click += new System.EventHandler(this.closeConnectionToolStripMenuItem_Click);
-            // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(231, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(149, 6);
             // 
             // quitToolStripMenuItem
             // 
             this.quitToolStripMenuItem.Name = "quitToolStripMenuItem";
-            this.quitToolStripMenuItem.Size = new System.Drawing.Size(234, 22);
+            this.quitToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.quitToolStripMenuItem.Text = "Quit";
             this.quitToolStripMenuItem.Click += new System.EventHandler(this.quitToolStripMenuItem_Click);
             // 
@@ -201,7 +174,6 @@
             this.keydatesToolStripMenuItem,
             this.toolStripSeparator5,
             this.activityToolStripMenuItem});
-            this.showToolStripMenuItem.Enabled = false;
             this.showToolStripMenuItem.Name = "showToolStripMenuItem";
             this.showToolStripMenuItem.Size = new System.Drawing.Size(48, 20);
             this.showToolStripMenuItem.Text = "Show";
@@ -237,6 +209,7 @@
             this.pricescompleteToolStripMenuItem.Name = "pricescompleteToolStripMenuItem";
             this.pricescompleteToolStripMenuItem.Size = new System.Drawing.Size(166, 22);
             this.pricescompleteToolStripMenuItem.Text = "Prices (complete)";
+            this.pricescompleteToolStripMenuItem.Click += new System.EventHandler(this.pricescompleteToolStripMenuItem_Click);
             // 
             // toolStripSeparator4
             // 
@@ -360,8 +333,6 @@
         public System.Windows.Forms.DataGridView dataGridView1;
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem systemToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem connectToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem closeConnectionToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem showToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem usersToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem pricesToolStripMenuItem;
@@ -369,7 +340,6 @@
         private System.Windows.Forms.ToolStripMenuItem activityToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem editToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem updateDataToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem applyChangesToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripMenuItem quitToolStripMenuItem;

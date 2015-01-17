@@ -27,10 +27,7 @@ namespace ConvenienceFormClient
             switch (state)
             {
                 case State.START:
-                    this.closeConnectionToolStripMenuItem.Enabled = false;
-                    this.updateDataToolStripMenuItem.Enabled = false;
-                    this.connectToolStripMenuItem.Enabled = true;
-                    this.showToolStripMenuItem.Enabled = false;
+                    this.showToolStripMenuItem.Enabled = true;
                     this.editToolStripMenuItem.Enabled = false;
                     this.dataGridView1.Enabled = false;
 
@@ -38,9 +35,6 @@ namespace ConvenienceFormClient
                     break;
                 
                 case State.DATA:
-                    this.closeConnectionToolStripMenuItem.Enabled = true;
-                    this.connectToolStripMenuItem.Enabled = false;
-                    this.updateDataToolStripMenuItem.Enabled = true;
                     this.showToolStripMenuItem.Enabled = true;
                     this.editToolStripMenuItem.Enabled = true;
                     this.dataGridView1.Enabled = true;
@@ -50,49 +44,19 @@ namespace ConvenienceFormClient
                     this.textLog.AppendText("Changed to State DATA" + System.Environment.NewLine);
                     break;
 
-                case State.UPDATED:
-                    this.closeConnectionToolStripMenuItem.Enabled = true;
-                    this.connectToolStripMenuItem.Enabled = false;
-                    this.updateDataToolStripMenuItem.Enabled = true;
-                    this.showToolStripMenuItem.Enabled = true;
-                    this.editToolStripMenuItem.Enabled = false;
-                    this.dataGridView1.Enabled = false;
-
-                    this.textLog.AppendText("Changed to State UPDATED" + System.Environment.NewLine);
-                    break;
-
             }
             this.state = state;
         }
 
 
 
-        private void connectToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            //this.cn.Connect();
-            this.cn.Update();
-            this.ChangeState(State.UPDATED);
-        }
-
-        private void closeConnectionToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            this.ChangeState(State.START);
-            //this.cn.Close();
-        }
-
         DataGridAdapter dg;
 
         private void usersToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            this.cn.Update();
             this.ChangeState(State.DATA);
             textLog.AppendText("#Users: " + this.cn.Users.Count + System.Environment.NewLine);
-            //Double d;
-            //this.cn.cs.Users.TryGetValue("Gustav Geier",out d);
-            //textLog.AppendText("user1: "+ (d+0.1));
-            //List<KeyValuePair<String, Double>> list = new List<KeyValuePair<string, double>>();
-            //list.AddRange(cn.cs.Users);
-            //dataGridView1.DataSource = list;
-            //dataGridView1.DataSource = this.cn.Users.ToArray();
 
             dg = new DataGridAdapter();
             dg.ImportUserData(this.cn.Users);
@@ -107,16 +71,9 @@ namespace ConvenienceFormClient
 
         private void pricesToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            this.cn.Update();
             this.ChangeState(State.DATA);
             textLog.AppendText("#Products: " + this.cn.Products.Count + System.Environment.NewLine);
-            //Double d;
-            //this.cn.cs.Users.TryGetValue("Gustav Geier", out d);
-            //textLog.AppendText("user1: "+ (d+0.1));
-            //List<KeyValuePair<String, Double>> list = new List<KeyValuePair<string, double>>();
-            //list.AddRange(cn.cs.Users);
-            //dataGridView1.DataSource = list;
-            //dataGridView1.DataSource = this.cn.Products.ToArray();
-            //test dg
 
             DataGridAdapter dg = new DataGridAdapter();
             dg.ImportPricingData(this.cn.Products);
@@ -125,12 +82,6 @@ namespace ConvenienceFormClient
             dataGridView1.EditMode = DataGridViewEditMode.EditOnKeystrokeOrF2;
             dataGridView1.Enabled = true;
             dataGridView1.ReadOnly = false;
-        }
-
-        private void updateDataToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            this.cn.Update();
-            this.ChangeState(State.UPDATED);
         }
 
         private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
@@ -162,11 +113,8 @@ namespace ConvenienceFormClient
         private void quitToolStripMenuItem_Click(object sender, EventArgs e)
         {
             //save changes?
-            if (this.state != State.START)
-            {
-                //this.cn.Close();
-            }
-            this.Close();
+            
+            //really wanna quit?
         }
 
         private void keydatesToolStripMenuItem_Click(object sender, EventArgs e)
@@ -184,15 +132,6 @@ namespace ConvenienceFormClient
             dataGridView1.EditMode = DataGridViewEditMode.EditOnKeystrokeOrF2;
         }
 
-		/*private void sinceLastKeydateToolStripMenuItem_Click(object sender, EventArgs e)
-		{
-			//TODO: own state
-			this.ChangeState(State.PRICES);
-			Dictionary<string,double> dict = this.cn.GetDebtSinceKeydate();
-
-			DataGridAdapter da = new DataGridAdapter ();
-
-		}*/
 
         private void userscompleteToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -262,6 +201,20 @@ namespace ConvenienceFormClient
         private void addKeydateToolStripMenuItem_Click(object sender, EventArgs e)
         {
             //add a new keydate...
+        }
+
+        private void pricescompleteToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.ChangeState(State.DATA);
+
+            List<Tuple<int, string, double, string>> list = this.cn.GetFullProducts();
+            
+            DataGridAdapter da = new DataGridAdapter();
+            da.ImportPricingData(list);
+
+
+            dataGridView1.DataSource = da.Table;
+            dataGridView1.EditMode = DataGridViewEditMode.EditOnKeystrokeOrF2;
         }
     }
 }

@@ -118,17 +118,27 @@ namespace ConvenienceBackend
         /// </summary>
         internal List<Tuple<int, string, double, string>> GetFullProducts()
         {
-            MySqlDataReader reader = this.Query("SELECT * FROM gk_pricing ORDER BY username ASC LIMIT 0,200");
+            MySqlDataReader reader = this.Query("SELECT * FROM gk_pricing ORDER BY product ASC LIMIT 0,200");
 
             List<Tuple<int, string, double, string>> list = new List<Tuple<int, string, double, string>>();
 
             while (reader.Read())
             {
+                string comment;
+                try
+                {
+                    comment = reader.GetString("comment");
+                }
+                catch (Exception)
+                {
+                    comment = "";
+                }
+                
                 list.Add(new Tuple<int, string, double, string>(
                     reader.GetInt32("ID"),
                     reader.GetString("product"),
                     reader.GetDouble("price"),
-                    reader.GetString("comment")
+                    comment
                     ));
             }
 

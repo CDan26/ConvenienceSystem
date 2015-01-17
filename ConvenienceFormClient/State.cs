@@ -8,7 +8,6 @@ namespace ConvenienceFormClient
     public enum State
     {
         START,
-        UPDATED,
         DATA
     }
 }
