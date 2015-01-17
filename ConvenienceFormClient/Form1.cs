@@ -69,7 +69,7 @@ namespace ConvenienceFormClient
 
         private void connectToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            this.cn.Connect();
+            //this.cn.Connect();
             this.cn.Update();
             this.ChangeState(State.UPDATED);
         }

@@ -90,7 +90,8 @@ namespace ConvenienceBackend
         {
             //BinaryReader reader = new BinaryReader(stream);
             int count = reader.ReadInt32();
-            var dictionary = new List<Tuple<string, string>>(count);
+            //var dictionary = new List<Tuple<string, string>>(count);
+            var dictionary = new List<Tuple<string, string>>();
             for (int n = 0; n < count; n++)
             {
                 var key = reader.ReadString();
@@ -128,6 +129,73 @@ namespace ConvenienceBackend
                 var i3 = reader.ReadDouble();
                 var i4 = reader.ReadString();
                 dictionary.Add(new Tuple<string, string, double, string>(i1, i2, i3, i4));
+            }
+            return dictionary;
+        }
+
+        /*** Lists of Tuples of int/String/Double/String/string ***/
+
+        public static void SerializeListISDSS(List<Tuple<int, string, double, string, string>> dictionary, BinaryWriter writer)
+        {
+            //BinaryWriter writer = new BinaryWriter(stream);
+            writer.Write(dictionary.Count);
+            foreach (var kvp in dictionary)
+            {
+                writer.Write(kvp.Item1);
+                writer.Write(kvp.Item2);
+                writer.Write(kvp.Item3);
+                writer.Write(kvp.Item4);
+                writer.Write(kvp.Item5);
+            }
+            writer.Flush();
+        }
+
+        public static List<Tuple<int, string, double, string, string>> DeserializeListtISDSS(BinaryReader reader)
+        {
+            //BinaryReader reader = new BinaryReader(stream);
+            int count = reader.ReadInt32();
+            var dictionary = new List<Tuple<int, string, double, string, string>>();
+            for (int n = 0; n < count; n++)
+            {
+                var i1 = reader.ReadInt32();
+                var i2 = reader.ReadString();
+                var i3 = reader.ReadDouble();
+                var i4 = reader.ReadString();
+                var i5 = reader.ReadString();
+                dictionary.Add(new Tuple<int, string, double, string, string>(i1,i2,i3,i4,i5));
+            }
+            return dictionary;
+        }
+
+
+        /*** Lists of Tuples of int/String/Double/String ***/
+
+        public static void SerializeListISDS(List<Tuple<int, string, double, string>> dictionary, BinaryWriter writer)
+        {
+            //BinaryWriter writer = new BinaryWriter(stream);
+            writer.Write(dictionary.Count);
+            foreach (var kvp in dictionary)
+            {
+                writer.Write(kvp.Item1);
+                writer.Write(kvp.Item2);
+                writer.Write(kvp.Item3);
+                writer.Write(kvp.Item4);
+            }
+            writer.Flush();
+        }
+
+        public static List<Tuple<int, string, double, string>> DeserializeListtISDS(BinaryReader reader)
+        {
+            //BinaryReader reader = new BinaryReader(stream);
+            int count = reader.ReadInt32();
+            var dictionary = new List<Tuple<int, string, double, string>>();
+            for (int n = 0; n < count; n++)
+            {
+                var i1 = reader.ReadInt32();
+                var i2 = reader.ReadString();
+                var i3 = reader.ReadDouble();
+                var i4 = reader.ReadString();
+                dictionary.Add(new Tuple<int, string, double, string>(i1, i2, i3, i4));
             }
             return dictionary;
         }

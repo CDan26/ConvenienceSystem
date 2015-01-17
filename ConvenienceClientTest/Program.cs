@@ -16,10 +16,10 @@ namespace ConvenienceClientTest
         {
             Console.WriteLine("connecting...");
             ConNetClient c = new ConNetClient();
-            c.Connect();
+            //c.Connect();
             Console.WriteLine("updating...");
             c.Update();
-            c.Close();
+            //c.Close();
 
             //just test sth.
             Console.WriteLine("buying...");

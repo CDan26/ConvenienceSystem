@@ -1,5 +1,4 @@
-﻿#define BINARY
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -20,13 +19,9 @@ namespace ConvenienceBackend
             //init stuff...            
 			//this.cs = new ConvenienceClient();
 		}
-#if (!BINARY)
-		private StreamReader sr;
-		private StreamWriter sw;
-#else
         private BinaryReader sr;
         private BinaryWriter sw;
-#endif
+
 
 
 		private Stream s;
@@ -39,13 +34,14 @@ namespace ConvenienceBackend
         //further data - only when asking for it
         private Object answer = null;
 
+        /// <summary>
+        /// partial Legacy-Support (just for indicating that it is the binary backend)
+        /// </summary>
+        /// <returns></returns>
         public static Boolean isBinaryBackend()
         {
-#if BINARY
+
             return true;
-#else
-            return false;
-#endif
         }
 
 		/// <summary>
@@ -62,16 +58,10 @@ namespace ConvenienceBackend
 			try
 			{
 				s = client.GetStream();
-#if (!BINARY)
-				sr = new StreamReader(s);
-				sw = new StreamWriter(s);
-				sw.AutoFlush = true;
-                sr.ReadLine();
-#else
                 sr = new BinaryReader(s);
                 sw = new BinaryWriter(s);
                 sr.ReadString();
-#endif
+
 			}
 			catch (Exception e)
 			{
@@ -98,21 +88,15 @@ namespace ConvenienceBackend
 			if (client == null) return false;
 			try
 			{
-#if (!BINARY)
-                sw.WriteLine(command);
-				String answer = sr.ReadLine();
-				//String answer = sr.ReadToEnd();
-				Console.WriteLine("a: " + answer);
-				return this.Clienthandle(command, answer);
-#else
+
                 this.ClientCMDBinary(command);
                 return this.ClientHandleBinary(command);
-#endif
+
                 
 			}
-			catch (Exception)
+			catch (Exception e)
 			{
-				//Console.WriteLine("Exeption: " + e.Message);
+                Logger.Log("ConNetClient.ClientCMD", "Exception: " + e.Message);
 				return false;
 			}
 			//return true;
@@ -138,8 +122,10 @@ namespace ConvenienceBackend
             {
                 command = command + comment + Settings.MsgSeperator;
             }
-
-            return this.ClientCMD(command);
+            this.Connect();
+            var ret = this.ClientCMD(command);
+            this.Close();
+            return ret;
         }
 
         /// <summary>
@@ -148,7 +134,9 @@ namespace ConvenienceBackend
         /// </summary>
         private void ClientCMDBinary(string command)
         {
- 	        //just split it up again to a string array (0:cmd, 1:clientname, 2-n:parameters)
+ 	        
+            
+            //just split it up again to a string array (0:cmd, 1:clientname, 2-n:parameters)
             String[] words = command.Split(new Char[] { Settings.MsgSeperator });
             
             //get the actual command
@@ -175,12 +163,16 @@ namespace ConvenienceBackend
 
         public void UpdateKeydates()
         {
+            this.Connect();
             this.ClientCMD("keydates" + Settings.MsgSeperator + "gkclient");
+            this.Close();
         }
 
         public List<Tuple<int,string,double,string,string>> GetFullUsers()
         {
+            this.Connect();
             bool a = this.ClientCMD("fullusers" + Settings.MsgSeperator + "gkclient");
+            this.Close();
             if (a)
             {
                 //successfull
@@ -192,7 +184,9 @@ namespace ConvenienceBackend
 
         public List<Tuple<string,string,double,string>> GetActivity()
         {
+            this.Connect();
             bool a = this.ClientCMD("activity" + Settings.MsgSeperator + "gkclient");
+            this.Close();
             if (a)
             {
                 //successfull
@@ -204,7 +198,9 @@ namespace ConvenienceBackend
 
 		public Dictionary<string,double> GetDebtSinceKeydate()
 		{
-			bool a = this.ClientCMD ("lastkeydate" + Settings.MsgSeperator + "gkclient");
+            this.Connect();
+            bool a = this.ClientCMD("lastkeydate" + Settings.MsgSeperator + "gkclient");
+            this.Close();
 			if (a)
 			{
 				return ((Dictionary<string,double>)this.answer);
@@ -212,7 +208,7 @@ namespace ConvenienceBackend
 			return null;
 		}
 
-#if (BINARY)
+
         private bool ClientHandleBinary(String command)
         {
  	        //Decide on what Data to wait for by the command that was sent
@@ -310,98 +306,41 @@ namespace ConvenienceBackend
 
         }
 
-#endif
+
 		/// <summary>
-		/// Tells the server to update its data and then fetches User and Product Information
+		/// Fetches User and Product Information from the server
 		/// </summary>
 		public void Update()
 		{
-			Console.WriteLine("Update Server");
-			Console.WriteLine(this.ClientCMD("update" + Settings.MsgSeperator + "gkclient"));
-			Console.WriteLine("Update Users");
+            this.Connect();
+            Console.WriteLine("Update Users");
 			Console.WriteLine(this.ClientCMD("users" + Settings.MsgSeperator + "gkclient"));
 			Console.WriteLine("Update Products");
 			Console.WriteLine(this.ClientCMD("prices" + Settings.MsgSeperator + "gkclient"));
+            this.Close();
 		}
 
-		/// <summary>
-		/// Handles the commands and answers on the client side.
-		/// Returns true, if everxthing is fine
-		/// </summary>
-		/// <param name="name">The command that was sent</param>
-		/// <param name="answer">The answer received from Server</param>
-		private Boolean Clienthandle(string name, string answer)
-		{
-			String p1 = name.Substring(0, name.IndexOf(Settings.MsgSeperator));
-
-			switch (p1)
-			{
-			case "users":
-				try
-				{
-					Dictionary<String, Double> dict = String2Dict(answer);
-					//success!
-					this.Users = dict;
-					return true;
-				}
-				catch (Exception)
-				{
-					return false;
-				}
-			case "update":
-				return (answer == Settings.MsgACK);
-            case "buy":
-                return (answer == Settings.MsgACK);
-
-			case "prices":
-				try
-				{
-					Dictionary<String, Double> dict = String2Dict(answer);
-					//success!
-					this.Products = dict;
-					return true;
-				}
-				catch (Exception)
-				{
-					return false;
-				}
-
-			case "register":
-				//not yet Implemented
-				return true;
-
-			default:
-				//what happened?
-				return true;
-			}
-
-			throw new NotImplementedException();
-		}
+		
 
 		/// <summary>
 		/// Close the connection
 		/// </summary>
 		public void Close()
 		{
-			client.Close();
+			if (this.client != null)
+            {
+                if (this.client.Connected)
+                {
+                    this.client.Close();
+                }
+            }
 		}
 
 
-		/*private Boolean Buy(List<String> prod)
-		{
-			//create String
-			String s = "buy" + Settings.MsgSeperator + "gkclient";
-			foreach (String p in prod)
-			{
-				s += "" + Settings.MsgSeperator + p;
-			}
-			this.Connect ();
-			Boolean answer = this.ClientCMD (s);
-			this.Close ();
 
-			return answer;
-		}*/
-
+        /// <summary>
+        /// Tell the server that a user bought products
+        /// </summary>
         public Boolean Buy(String user, List<String> prod)
         {
             //create String
@@ -418,62 +357,6 @@ namespace ConvenienceBackend
             return answer;
         }
 
-		/// <summary>
-		/// Converts a Dictionary<String,Double> to a String
-		/// </summary>
-        [System.Obsolete("use the Serialization class methods instead!")]
-		public static String Dict2String(Dictionary<String,Double> dict)
-		{
-			String text = "";
-			Console.WriteLine("Dict-size: " + dict.Count());
-
-			foreach (KeyValuePair<String, Double> s in dict)
-			{
-				//Console.WriteLine("[GetProducts] Product: " + s.Key + " with price: " + s.Value);
-				text = text + s.Key + "=" + s.Value + Settings.MsgSeperator;
-			}
-
-			return text;
-		}
-
-		/// <summary>
-		/// Converts a String to a Dictionary<String,Double>
-		/// </summary>
-        [System.Obsolete("use the Serialization class methods instead!")]
-		public static Dictionary<String, Double> String2Dict(String text)
-		{
-			//Console.WriteLine("test000: " + text);
-
-			Dictionary<String, String> dictS = new Dictionary<String, String>();
-
-			dictS = text.Split(new[] {Settings.MsgSeperator}, StringSplitOptions.RemoveEmptyEntries)
-				.Select(part => part.Split('='))
-				.ToDictionary(split => split[0], split => split[1]);
-
-
-			Dictionary<String, Double> dict = new Dictionary<string, double>();
-
-            foreach (KeyValuePair<String, String> s in dictS)
-            {
-                /**
-                 * 
-                 * Known Issue!
-                 * Depending on Localization the Strings need ',' or '.'.
-                 * For now, we only handle Germany (DE, using ',') and (##, using '.')
-                 * 
-                 * 
-                 **/
-                String v = s.Value;
-                if (System.Globalization.RegionInfo.CurrentRegion.TwoLetterISORegionName.Equals("DE"))
-                {
-                    v = s.Value.Replace('.', ',');
-                }
-                //String v = s.Value;
-                dict.Add(s.Key, (Convert.ToDouble(v)));
-                //Console.WriteLine("s2d: ("+v+") "+(Convert.ToDouble(v)).ToString("R"));
-            }
-
-			return dict;
-		}
+		
 	}
 }

@@ -55,7 +55,7 @@
     <Compile Include="BinarySerializers.cs" />
     <Compile Include="ConnectedActivity.cs" />
     <Compile Include="ConNetClient.cs" />
-    <Compile Include="ConvenienceClient.cs" />
+    <Compile Include="Logger.cs" />
     <Compile Include="MainActivity.cs" />
     <Compile Include="Resources\Resource.Designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

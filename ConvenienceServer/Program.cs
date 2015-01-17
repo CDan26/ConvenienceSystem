@@ -17,7 +17,7 @@ namespace ConvenienceServer
         {
             //Console.WriteLine("Starting Server");
             ConNetServer c = new ConNetServer();
-            c.Connect();
+            c.StartServer();
 
             /*ConvenienceBackend.ConvenienceServer cs = new ConvenienceBackend.ConvenienceServer();
             cs.Test();*/
