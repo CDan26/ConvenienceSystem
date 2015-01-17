@@ -12,34 +12,19 @@ namespace ConvenienceBackend
 {
     internal class ConvenienceServer
     {
-        private MySqlConnection Connection;
-
-        //public Dictionary<String,Double> Users;
-        //public List<Tuple<int, string, double, string, string>> FullUsers;
-        //public Dictionary<String, Double> Products;
-        //public List<Tuple<int, string, double, string>> FullProducts;
-        //public Dictionary<String, String> Mails;
-        //public Dictionary<String, String> KeyDates;
         /// <summary>
-        /// List of recent Accounting Activites
-        /// Tuples for (Date, user, price, comment)
+        /// The actual Database Connection instance
         /// </summary>
-        //public List<Tuple<String, String, Double, String>> Accounting;
-        //public List<Tuple<String, String>> KeyDates;
+        private MySqlConnection Connection;
 
         internal ConvenienceServer()
         {
-            //Users = new Dictionary<string, double>();
-            //FullUsers = new List<Tuple<int, string, double, string, string>>();
-            //Products = new Dictionary<string, double>();
-            //FullProducts = new List<Tuple<int, string, double, string>>();
-            //Mails = new Dictionary<string, string>();
-            //Accounting = new List<Tuple<string, string, double, string>>();
-            //KeyDates = new List<Tuple<string, string>>();
-
             //do some init stuff if needed
         }
 
+        /// <summary>
+        /// Connects to the Database Server
+        /// </summary>
         private void Connect()
         {
             Connection = new MySqlConnection("server="+Settings.Server+";database="+Settings.DBName+";uid="+Settings.DBUser+";password="+Settings.DBPass);
@@ -50,46 +35,10 @@ namespace ConvenienceBackend
           
         }
 
-        //internal void Update()
-        //{
-        //    this.Connect();
-        //    this.GetUsers();
-        //    this.GetProducts();
-        //    this.GetMails();
-        //    this.GetAccounting();
-        //    this.GetKeyDates();
-        //    this.Close();
-        //}
-
-
-
-        internal List<Tuple<String, String, Double, String>> GetAccounting(Boolean all = false)
-        {
-            //Get all or only the last 25 accounting activities
-            MySqlDataReader reader;
-            List<Tuple<String, String, Double, String>> Accounting = new List<Tuple<string,string,double,string>>();
-            if (all)
-            {
-                reader = this.Query("SELECT * FROM gk_accounting ORDER BY gk_accounting.date DESC");
-            }
-            else
-            { 
-                reader = this.Query("SELECT * FROM gk_accounting ORDER BY gk_accounting.date DESC LIMIT 0,10");
-            }
-            while (reader.Read())
-            {
-                Accounting.Add(new Tuple<string, string, double, string>(
-                    reader.GetString("date"), 
-                    reader.GetString("user"), 
-                    reader.GetDouble("price"), 
-                    reader.GetString("comment")));
-            }
-
-            reader.Close();
-            return Accounting;
-
-        }
-
+       
+        /// <summary>
+        /// Closes the connection if it was open
+        /// </summary>
         private void Close()
         {
             if (this.Connection != null)
@@ -99,55 +48,23 @@ namespace ConvenienceBackend
             }
         }
 
-        //public void Test()
-        //{
-        //    Console.WriteLine("[Test] starting Connection");
-        //    this.Connect();
-        //    Console.WriteLine("[Test] starting Query GetUsers");
-        //    this.GetUsers();
-        //    Console.WriteLine("[Test] starting Query GetProducts");
-        //    this.GetProducts();
-        //    Console.WriteLine("[Test] starting Query GetMails");
-        //    this.GetMails();
-        //    Console.WriteLine("[Test] starting Decimal Test");
-        //    this.DecTest();
-        //    Console.WriteLine("[Test] Test finished");
-        //}
 
-        //private void DecTest()
-        //{
-        //    this.Connect();
-        //    MySqlDataReader reader = this.Query("SELECT *,SUM(price) FROM gk_accounting WHERE date >= (SELECT MAX(keydate) FROM gk_keydates) GROUP BY user");
-        //    while (reader.Read())
-        //    {
-        //        Console.WriteLine(reader.GetString("user") + ", " + reader.GetDouble("SUM(price)"));
-        //    }
-        //    reader.Close();
-        //    this.Close();
-        //}
-
+        /// <summary>
+        /// Executes the query in the Database returning and MySQLDataReader for the results.
+        /// BEWARE: The Connection remains open and needs to be cloesd when finished reading!
+        /// </summary>
         private MySqlDataReader Query(String stm)
         {
             this.Connect();
             
-            //String test ="";
             MySqlCommand cmd = new MySqlCommand(stm, Connection);
-            //Object obj = cmd.ExecuteScalar();
             MySqlDataReader reader = cmd.ExecuteReader();
-            //String test = Convert.ToString(obj);
-            /*while (reader.Read())
-            {
-                //reader.Read();
-                test = test + reader.GetString("debt");
-            }
-
-            //Debugging: print it!
-            Console.WriteLine("[Query] Result: " + test);*/
-            //reader.Close();
-            //this.Close();
             return reader;
         }
 
+        /// <summary>
+        /// returns a Dictionary representing the (200) active users,  and their current debts
+        /// </summary>
         internal Dictionary<String, Double> GetUsers()
         {
             MySqlDataReader reader = this.Query("SELECT * FROM gk_user WHERE gk_user.state='active' ORDER BY username ASC LIMIT 0,200");
@@ -159,9 +76,13 @@ namespace ConvenienceBackend
             }
 
             reader.Close();
+            this.Close();
             return Users;
         }
 
+        /// <summary>
+        /// Returns a List of Tuples with all information of all users (limited to 200)
+        /// </summary>
         internal List<Tuple<int, string, double, string, string>> GetFullUsers()
         {
             MySqlDataReader reader = this.Query("SELECT * FROM gk_user ORDER BY username ASC LIMIT 0,200");
@@ -188,9 +109,13 @@ namespace ConvenienceBackend
             }
             
             reader.Close();
+            this.Close();
             return list;
         }
 
+        /// <summary>
+        /// returns a List of Tuples with all information about the products (limit:200)
+        /// </summary>
         internal List<Tuple<int, string, double, string>> GetFullProducts()
         {
             MySqlDataReader reader = this.Query("SELECT * FROM gk_pricing ORDER BY username ASC LIMIT 0,200");
@@ -208,6 +133,7 @@ namespace ConvenienceBackend
             }
 
             reader.Close();
+            this.Close();
             return list;
         }
 
@@ -227,15 +153,28 @@ namespace ConvenienceBackend
                 Debts.Add(reader.GetString("user"), reader.GetDouble("SUM(price)"));
             }
             reader.Close();
+            this.Close();
             return Debts;
         }
 
         /// <summary>
-        /// Gets the (count) last activity elements of the system
+        /// Gets the (count) last activity elements of the system.
+        /// For non-positive values of count, get everything
         /// </summary>
         internal List<Tuple<string,string,double,string>> GetLastActivity(int count = 10)
         {
-            MySqlDataReader reader = this.Query("SELECT * FROM gk_accounting ORDER BY gk_accounting.date DESC LIMIT 0,"+count);
+            MySqlDataReader reader;
+            
+            //Allow getting all activities by havin non-positive count-parameter
+            if (count < 1)
+            {
+                reader = this.Query("SELECT * FROM gk_accounting ORDER BY gk_accounting.date DESC");
+            }
+            else
+            {
+                reader = this.Query("SELECT * FROM gk_accounting ORDER BY gk_accounting.date DESC LIMIT 0," + count);
+            }
+            
 
             List<Tuple<string, string, double, string>> Debts = new List<Tuple<string, string, double, string>>();
 
@@ -250,6 +189,7 @@ namespace ConvenienceBackend
 
             }
             reader.Close();
+            this.Close();
             return Debts;
         }
 
@@ -268,11 +208,12 @@ namespace ConvenienceBackend
                 Debts.Add(reader.GetString("user"), reader.GetDouble("SUM(price)"));
             }
             reader.Close();
+            this.Close();
             return Debts;
         }
 
         /// <summary>
-        /// Returns the what product was bought how often by the user.
+        /// Returns what product was bought how often by the user.
         /// Beware! uses the "comment" column of the DB - on-product-comments are possible!
         /// </summary>
         /// <param name="user">The user</param>
@@ -287,6 +228,7 @@ namespace ConvenienceBackend
                 prod.Add(reader.GetString("comment"), reader.GetInt32("COUNT(date)"));
             }
             reader.Close();
+            this.Close();
             return prod;
         }
 
@@ -312,29 +254,14 @@ namespace ConvenienceBackend
                 String answer = reader.GetString(0);
                 //Console.WriteLine(answer);
             }
+
+            this.Close();
         }
 
-        internal Dictionary<String, Double> GetUserDict()
-        {
-            //if (this.Users == null) return null;
-            //return this.Users;
-            return this.GetUsers();
-        }
 
-        internal Dictionary<String, Double> GetProductsDict()
-        {
-            //if (this.Products == null) return null;
-            //return this.Products;
-            return this.GetProducts();
-        }
-
-        internal Dictionary<String, String> GetMailsDict()
-        {
-            //if (this.Mails == null) return null;
-            //return this.Mails;
-            return this.GetMails();
-        }
-
+        /// <summary>
+        /// Returns a Dictionary of products and the corresponding price
+        /// </summary>
         internal Dictionary<String, Double> GetProducts()
         {
             MySqlDataReader reader = this.Query("SELECT * FROM gk_pricing ORDER BY product ASC LIMIT 0,200");
@@ -346,10 +273,13 @@ namespace ConvenienceBackend
                 Products.Add(reader.GetString("product"),reader.GetDouble("price"));
             }
             reader.Close();
+            this.Close();
             return Products;
         }
 
-
+        /// <summary>
+        /// Returns a List of Tuples representing the Keydates
+        /// </summary>
         internal List<Tuple<String, String>> GetKeyDates()
         {
             MySqlDataReader reader = this.Query("SELECT * FROM gk_keydates ORDER BY keydate DESC LIMIT 0,200");
@@ -362,16 +292,13 @@ namespace ConvenienceBackend
             }
 
             reader.Close();
+            this.Close();
             return KeyDates;
         }
 
-        internal List<Tuple<String, String>> GetKeyDatesList()
-        {
-            //if (this.KeyDates == null) return null;
-            //return this.KeyDates;
-            return this.GetKeyDates();
-        }
-
+        /// <summary>
+        /// Returns a Dictionary of the users and their mailadresses
+        /// </summary>
         internal Dictionary<String, String> GetMails()
         {
             
@@ -384,9 +311,15 @@ namespace ConvenienceBackend
             }
 
             reader.Close();
+            this.Close();
             return Mails;
         }
 
+        /// <summary>
+        /// perform the buy action for a user
+        /// </summary>
+        /// <param name="username">the buying user</param>
+        /// <param name="products">A List of the products</param>
         internal Boolean Buy(String username, List<String> products)
 		{
 			//Console.WriteLine ("CS, u:" + username + ", p:" + products);
@@ -437,7 +370,7 @@ namespace ConvenienceBackend
 				String answer = reader2.GetString(0);
 				//Console.WriteLine(answer);
 			}
-
+            this.Close();
 			return true;
 		}
 
@@ -452,6 +385,11 @@ namespace ConvenienceBackend
             return result;
         }
 
+        /// <summary>
+        /// TODO (unfinished)
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
         internal String Register(String name)
         {
             String id = "";

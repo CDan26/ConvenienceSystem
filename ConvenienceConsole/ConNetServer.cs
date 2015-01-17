@@ -162,12 +162,12 @@ namespace ConvenienceBackend
                 return true;
             case "prices":
                 //get prices
-                BinarySerializers.SerializeDictSD(cs.GetProductsDict(), sw);
+                BinarySerializers.SerializeDictSD(cs.GetProducts(), sw);
                 return true;
             //break;
             case "users":
                 //get users
-                BinarySerializers.SerializeDictSD(cs.GetUserDict(), sw);
+                BinarySerializers.SerializeDictSD(cs.GetUsers(), sw);
                 return true;
             case "fullusers":
                 //get users
@@ -175,7 +175,7 @@ namespace ConvenienceBackend
                 BinarySerializers.SerializeListISDSS(cs.GetFullUsers(), sw);
                 return true;
             case "keydates":
-                BinarySerializers.SerializeListS(cs.GetKeyDatesList(), sw);
+                BinarySerializers.SerializeListS(cs.GetKeyDates(), sw);
                 return true;
 			case "lastkeydate":
 				BinarySerializers.SerializeDictSD(cs.GetDebtSinceKeyDate (), sw);	
@@ -281,14 +281,14 @@ namespace ConvenienceBackend
                     return true;
                 case "prices":
                     //get prices
-                    Dictionary<String, Double> dict = cs.GetProductsDict();
+                    Dictionary<String, Double> dict = cs.GetProducts();
                     answer = Dict2String(dict);
                     return true;
                     //Transmit somehow...
                     //break;
                 case "users":
                     //get users
-                    Dictionary<String, Double> dictuser = cs.GetUserDict();
+                    Dictionary<String, Double> dictuser = cs.GetUsers();
                     answer = Dict2String(dictuser);
                     return true;
 
@@ -326,7 +326,7 @@ namespace ConvenienceBackend
             //get mail for user
             String mail;
             //Console.WriteLine("DebugMail ("+p+")");
-            Dictionary<String, String> dict = this.cs.GetMailsDict();
+            Dictionary<String, String> dict = this.cs.GetMails();
             /*foreach (KeyValuePair<String, String> kv in dict)
             {
                 Console.WriteLine(kv.Key + " : " + kv.Value);
@@ -348,12 +348,13 @@ namespace ConvenienceBackend
 
             String msg = "Hallo " + p + ", " + System.Environment.NewLine + System.Environment.NewLine;
             msg += "Du hast gerade Prdukte gekauft: " + System.Environment.NewLine;
+            Dictionary<string,double> products = this.cs.GetProducts();
             foreach (String s in list)
             {
                 //Console.WriteLine("buy: " + s);
                 Double prod;
-                if (this.cs.GetProductsDict().TryGetValue(s, out prod))
-                    msg += s + " fuer " + (this.cs.GetProductsDict()[s]).ToString("C") + System.Environment.NewLine;
+                if (this.cs.GetProducts().TryGetValue(s, out prod))
+                    msg += s + " fuer " + (products[s]).ToString("C") + System.Environment.NewLine;
             }
             msg += "Bitte beachte, dass die Daten nur sporadisch aktualisiert werden. Bei Fragen wende dich einfach an: " + Settings.Contactmail + System.Environment.NewLine;
             msg += "Vielen Dank und guten Durst/Appetit, " + System.Environment.NewLine + "Deine Getraenkekasse";
