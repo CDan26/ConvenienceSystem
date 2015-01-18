@@ -60,7 +60,21 @@ namespace ConvenienceApp
             //Set the Listener - it's me!
             listview.OnItemClickListener = this;
 
+            //Add CLick-Listeners
+            Button EmptyButton = FindViewById<Button>(Resource.Id.ButtonEmpty);
+
+            // Reset: clear products and Update
+            EmptyButton.Click += delegate
+            {
+                this.SendEmptyNotification();
+                this.alert("Danke für's Melden");
+            };
             
+        }
+
+        private void SendEmptyNotification()
+        {
+            ConApp.client.EmptyNotification();
         }
 
         /// <summary>

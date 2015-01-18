@@ -158,6 +158,10 @@ namespace ConvenienceBackend
             case "activity":
                 BinarySerializers.SerializeListSSDS(cs.GetLastActivity(), sw);
                 return true;
+            case "emptynotification":
+                this.EmptyMailThread();
+                sw.Write(Settings.MsgACK);
+                return true;
             case "addkeydate":
                 //command: keydate,client,keydate=MsgACK,comment=MsgACK
                 string keydate = sr.ReadString();
@@ -211,11 +215,22 @@ namespace ConvenienceBackend
         /// </summary>
         private void BuyMailThread(string user,List<String> list)
         {
-            Logger.Log("ConNetServer.BuymailThread", "Send (thread) mail to " + user);
+            Logger.Log("ConNetServer.BuyMailThread", "Send (thread) mail to " + user);
             Thread thread = new Thread(delegate() { this.BuyMail(user, list); });
             thread.Start();
         }
 
+        private void EmptyMailThread()
+        {
+            Logger.Log("ConNetServer.EmptyMailThread", "Send (thread) mail for Empty Notification");
+            string s = "Es wurde eine Meldung über einen Getränke-Notstand eingereicht";
+            Thread thread = new Thread(delegate() 
+                { 
+                    this.SendMail(Settings.Contactmail,s,"Getränke-Notstand");
+                    Logger.Log("EmptyMailThread", "Mail was sent successfully");
+                });
+            thread.Start();
+        }
         
         /// <summary>
         /// Send a Mail to the user for products they bought
@@ -280,7 +295,7 @@ namespace ConvenienceBackend
         /// </summary>
         /// <param name="to">the target mailadress</param>
         /// <param name="message">the message body of the mail</param>
-        private Boolean SendMail(String to, String message)
+        private Boolean SendMail(String to, String message, String subject = "Kauf im Getränkekassen-System")
         {
             //Console.WriteLine("Now, Sending Mail!");
             ServicePointManager.ServerCertificateValidationCallback = (sender, certificate, chain, sslPolicyErrors) => true;
@@ -293,7 +308,7 @@ namespace ConvenienceBackend
             //client.Credentials = new System.Net.NetworkCredential(Settings.MailUser, Settings.MailPass);
             client.Credentials = new System.Net.NetworkCredential(Settings.MailUser, Settings.MailPass);
             client.EnableSsl = true;
-            mail.Subject = "Kauf im Getränkekassen-System";
+            mail.Subject = subject;
             mail.Body = message;
             mail.BodyEncoding = System.Text.Encoding.UTF8;
             mail.SubjectEncoding = System.Text.Encoding.UTF8;

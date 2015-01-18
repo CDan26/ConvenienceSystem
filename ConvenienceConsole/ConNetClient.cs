@@ -325,6 +325,10 @@ namespace ConvenienceBackend
 				    //bought successfully
 				    answer = sr.ReadString();
 				    return (answer == Settings.MsgACK);
+                case "emptynotification":
+                    answer = sr.ReadString();
+                    return (answer == Settings.MsgACK);
+
 
 			    default:
 				    //what happened?
@@ -384,6 +388,15 @@ namespace ConvenienceBackend
             return answer;
         }
 
-		
-	}
+
+
+        internal void EmptyNotification()
+        {
+            string s = "emptynotification" + Settings.MsgSeperator+"gkclient";
+            this.Connect();
+            this.ClientCMD(s);
+            this.Close();
+            
+        }
+    }
 }
